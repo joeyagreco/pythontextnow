@@ -88,7 +88,6 @@ class Client:
         new_messages = cls.__get_received_messages()
         new_messages = [msg for msg in new_messages if not msg.read]
         time.sleep(1)
-        # return MessageContainer(new_messages, self)
         return new_messages
 
     @classmethod
@@ -116,10 +115,8 @@ class Client:
         messages = json.loads(response.content)
         messages = [
             Message(msg) if not msg["message"].startswith("http") else None for msg in messages["messages"]]
+        time.sleep(1)
         return messages
-
-        # time.sleep(1)
-        # return MessageContainer(messages, self)
 
     @staticmethod
     def __replace_newlines(text):
