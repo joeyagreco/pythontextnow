@@ -23,8 +23,6 @@ class Client:
     This class is used to store and set up initial Client configuration.
     """
     client_config = None
-    __RECEIVED_MESSAGE_TYPE = 1
-    __ALLOWED_EVENTS = ["message"]
 
     @classmethod
     def set_client_config(cls, username: str, sid_cookie: str, csrf_cookie: str) -> None:
@@ -32,13 +30,12 @@ class Client:
         text_now_api = TextNowAPI()
         scraper = cloudscraper.create_scraper()
         cookies = {
-            'connect.sid': sid_cookie,
-            '_csrf': csrf_cookie,
+            "connect.sid": sid_cookie,
+            "_csrf": csrf_cookie,
         }
         headers = {
-            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
-                          'Chrome/88.0.4324.104 Safari/537.36 ',
-            'x-csrf-token': text_now_api.get_csrf_token(cookies)
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.104 Safari/537.36 ",
+            "x-csrf-token": text_now_api.get_csrf_token(cookies)
         }
 
         client_config = ClientConfig(username=username,
