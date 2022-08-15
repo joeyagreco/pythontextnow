@@ -3,7 +3,7 @@ from datetime import datetime
 
 import cloudscraper
 
-from enum_ import MessageType, MessageDirection, ContactType, ReadStatus
+from textnow.enum import MessageType, MessageDirection, ContactType, ReadStatus
 from textnow.model.Client import Client
 
 

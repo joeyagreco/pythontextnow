@@ -1,7 +1,7 @@
 import time
 
-from api.TextNowAPI import TextNowAPI
-from util import general
+from textnow.api.TextNowAPI import TextNowAPI
+from textnow.util import general
 
 
 def send_sms(message: str, send_to: str):
