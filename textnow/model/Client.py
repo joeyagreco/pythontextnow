@@ -1,12 +1,8 @@
 from __future__ import annotations
 
-import json
-import re
 import time
 from dataclasses import dataclass
-from datetime import datetime
 from typing import Any
-from urllib.parse import quote
 
 import cloudscraper
 
@@ -101,69 +97,6 @@ class Client:
         return messages
 
     @classmethod
-    def get_messages(cls) -> list[Message]:
-        """
-        This gets the sent and received messages.
-        """
-        client_config = cls.get_client_config()
-        response = cls.client_config.scraper.get(
-            "https://www.textnow.com/api/users/" + client_config.username + "/messages",
-            headers=client_config.headers,
-            cookies=client_config.cookies)
-        response.raise_for_status()
-
-        messages = json.loads(response.content)
-        messages = [
-            Message(msg) if not msg["message"].startswith("http") else None for msg in messages["messages"]]
-        time.sleep(1)
-        return messages
-
-    @staticmethod
-    def __replace_newlines(text):
-        return re.sub(r'(?<!\\)\n', r'\\n', text)
-
-    @classmethod
-    def send_sms(cls, to, text):
-        """
-        Sends an sms text message to this number
-        """
-        client_config = cls.get_client_config()
-        text = cls.__replace_newlines(text)
-
-        data = \
-            {
-                'json': '{"contact_value":"' + to + '","contact_type":2,"message":"' + text + '","read":1,'
-                                                                                              '"message_direction":2,'
-                                                                                              '"message_type":1,'
-                                                                                              '"from_name":"' +
-                        client_config.username + '","has_video":false,"new":true,"date":"' + datetime.now().isoformat() + '"} '
-            }
-
-        response = client_config.scraper.post(
-            'https://www.textnow.com/api/users/' + client_config.username + '/messages',
-            headers=client_config.headers, cookies=client_config.cookies, data=data)
-
-        response.raise_for_status()
-
-        for cookie in response.cookies:
-            if cookie.name == 'XSRF-TOKEN':
-                client_config.cookies['XSRF-TOKEN'] = cookie.value
-
-        time.sleep(1)
-        return response
-
-    @classmethod
-    def get_unread_messages(cls):
-        """
-        Gets unread messages
-        """
-        new_messages = cls.get_received_messages()
-        new_messages = [msg for msg in new_messages if not msg.read]
-        time.sleep(1)
-        # return MessageContainer(new_messages, self)
-        return new_messages
-
-    @classmethod
     def get_received_messages(cls) -> list[Message]:
         """
         Gets inbound messages
@@ -172,21 +105,3 @@ class Client:
         messages = [msg for msg in messages if msg.direction == cls.__RECEIVED_MESSAGE_TYPE]
         time.sleep(1)
         return messages
-
-    @staticmethod
-    def patch(client_config: ClientConfig, message: Message, data):
-        if not all(key in message.raw for key in data):
-            return
-
-        base_url = "https://www.textnow.com/api/users/" + client_config.username + "/conversations/"
-        url = base_url + quote(message.number)
-
-        params = {
-            "latest_message_id": message.id,
-            "http_method": "PATCH"
-        }
-
-        res = client_config.scraper.post(url, params=params, data=data, cookies=client_config.cookies,
-                                         headers=client_config.headers)
-        time.sleep(1)
-        return res

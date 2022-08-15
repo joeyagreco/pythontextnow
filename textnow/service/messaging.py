@@ -21,13 +21,28 @@ def get_all_messages() -> list[Message]:
     return text_now_api.get_all_messages()
 
 
-def get_sent_messages() -> list[Message]:
+def get_all_incoming_messages() -> list[Message]:
     """
-    This gets the last 30 messages sent by your account.
+    Gets all incoming messages.
     """
     all_messages = get_all_messages()
-    return [message for message in all_messages if
-            MessageDirection.from_value(message.direction) == MessageDirection.OUTGOING]
+    return [message for message in all_messages if message.direction == MessageDirection.INCOMING]
+
+
+def get_all_outgoing_messages() -> list[Message]:
+    """
+    This all messages sent by your account.
+    """
+    all_messages = get_all_messages()
+    return [message for message in all_messages if message.direction == MessageDirection.OUTGOING]
+
+
+def get_all_unread_messages():
+    """
+    Gets all unread messages.
+    """
+    all_messages = get_all_messages()
+    return [message for message in all_messages if not message.read]
 
 
 def mark_message_as_read(message: Message) -> None:
