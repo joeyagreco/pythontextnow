@@ -6,6 +6,8 @@ import cloudscraper
 from textnow.enum import MessageType, MessageDirection, ContactType, ReadStatus
 from textnow.model.Client import Client, ClientConfig
 from textnow.model.Message import Message
+from textnow.model.MultiMediaMessage import MultiMediaMessage
+from textnow.model.TextMessage import TextMessage
 from textnow.util.ConfigReader import ConfigReader
 
 
@@ -50,7 +52,14 @@ class TextNowAPI:
             cookies=self.__client_config.cookies)
         response.raise_for_status()
 
-        messages = json.loads(response.content)
-        messages = [
-            Message(msg) if not msg["message"].startswith("http") else None for msg in messages["messages"]]
-        return messages
+        message_dicts = json.loads(response.content)["messages"]
+
+        all_messages = list()
+        # sort into Text and MultiMedia messages
+        for message_dict in message_dicts:
+            message_type = MessageType.from_value(message_dict["message_type"])
+            if message_type == MessageType.TEXT:
+                all_messages.append(TextMessage.from_dict(message_dict))
+            elif message_type == MessageType.MULTIMEDIA:
+                all_messages.append(MultiMediaMessage.from_dict(message_dict))
+        return all_messages
