@@ -1,9 +1,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any
-
-import cloudscraper
 
 
 @dataclass(kw_only=True, frozen=True)
@@ -13,7 +10,6 @@ class ClientConfig:
     """
     username: str
     events: list
-    scraper: Any
     headers: dict
     cookies: dict
 
@@ -28,7 +24,6 @@ class Client:
     def set_client_config(cls, username: str, sid_cookie: str, csrf_cookie: str) -> None:
         from pythontextnow.api.TextNowAPI import TextNowAPI
         text_now_api = TextNowAPI()
-        scraper = cloudscraper.create_scraper()
         cookies = {
             "connect.sid": sid_cookie,
             "_csrf": csrf_cookie,
@@ -40,7 +35,6 @@ class Client:
 
         client_config = ClientConfig(username=username,
                                      events=list(),
-                                     scraper=scraper,
                                      headers=headers,
                                      cookies=cookies)
         cls.client_config = client_config

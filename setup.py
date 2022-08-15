@@ -18,5 +18,6 @@ setuptools.setup(
     license="MIT",
     include_package_data=True,
     packages=setuptools.find_packages(exclude=("test", "docs")),
-    install_requires=["cloudscraper"]
+    install_requires=["requests",
+                      "setuptools"]
 )

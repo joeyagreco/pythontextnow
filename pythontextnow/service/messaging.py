@@ -4,13 +4,13 @@ from pythontextnow.model.Message import Message
 from pythontextnow.util import general
 
 
-def send_sms(message: str, send_to: str):
+def send_sms(*, message: str, send_to: str):
     """
     Sends an sms text message to this number.
     """
     message = general.replace_newlines(message)
     text_now_api = TextNowAPI()
-    text_now_api.send_message(message, send_to)
+    text_now_api.send_message(message=message, send_to=send_to)
 
 
 def get_all_messages() -> list[Message]:

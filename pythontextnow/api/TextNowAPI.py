@@ -2,10 +2,10 @@ import json
 from datetime import datetime
 from urllib.parse import quote
 
-import cloudscraper
+import requests
 
-from pythontextnow.enum import MessageType, MessageDirection, ContactType, ReadStatus
 from pythontextnow.api.Client import Client, ClientConfig
+from pythontextnow.enum import MessageType, MessageDirection, ContactType, ReadStatus
 from pythontextnow.model.Message import Message
 from pythontextnow.model.MultiMediaMessage import MultiMediaMessage
 from pythontextnow.model.TextMessage import TextMessage
@@ -14,8 +14,6 @@ from pythontextnow.util.ConfigReader import ConfigReader
 
 class TextNowAPI:
     def __init__(self):
-        self.__scraper = cloudscraper.create_scraper()
-
         self.__BASE_URL = ConfigReader.get("api", "textnow_base_url")
         self.__API_ROUTE = ConfigReader.get("api", "api_route")
         self.__CONVERSATIONS_ROUTE = ConfigReader.get("api", "conversations_route")
@@ -28,8 +26,8 @@ class TextNowAPI:
         return Client.get_client_config()
 
     def get_csrf_token(self, cookies: dict) -> str:
-        response = self.__scraper.get(f"{self.__BASE_URL}{self.__MESSAGING_ROUTE}",
-                                      cookies=cookies)
+        response = requests.get(f"{self.__BASE_URL}{self.__MESSAGING_ROUTE}",
+                                cookies=cookies)
 
         response.raise_for_status()
 
@@ -41,7 +39,7 @@ class TextNowAPI:
         csrf_token = resp[token_start:token_end]
         return csrf_token
 
-    def send_message(self, message: str, send_to: str) -> None:
+    def send_message(self, *, message: str, send_to: str) -> None:
         json_data = {"contact_value": send_to,
                      "contact_type": ContactType.DEFAULT.value,
                      "message": message,
@@ -55,7 +53,7 @@ class TextNowAPI:
 
         data = {"json": json.dumps(json_data)}
 
-        response = self.__scraper.post(
+        response = requests.post(
             f"{self.__BASE_URL}{self.__API_ROUTE}{self.__USERS_ROUTE}/{self.__client_config.username}{self.__MESSAGES_ROUTE}",
             headers=self.__client_config.headers,
             cookies=self.__client_config.cookies,
@@ -63,7 +61,7 @@ class TextNowAPI:
         response.raise_for_status()
 
     def get_all_messages(self) -> list[Message]:
-        response = self.__scraper.get(
+        response = requests.get(
             f"{self.__BASE_URL}{self.__API_ROUTE}{self.__USERS_ROUTE}/{self.__client_config.username}{self.__MESSAGES_ROUTE}",
             headers=self.__client_config.headers,
             cookies=self.__client_config.cookies)
@@ -93,9 +91,9 @@ class TextNowAPI:
 
         data = {"read": True}
 
-        response = self.__scraper.post(url,
-                                       params=params,
-                                       data=data,
-                                       cookies=self.__client_config.cookies,
-                                       headers=self.__client_config.headers)
+        response = requests.post(url,
+                                 params=params,
+                                 data=data,
+                                 cookies=self.__client_config.cookies,
+                                 headers=self.__client_config.headers)
         response.raise_for_status()
