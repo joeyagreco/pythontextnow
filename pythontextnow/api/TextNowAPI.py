@@ -5,7 +5,7 @@ from urllib.parse import quote
 import cloudscraper
 
 from pythontextnow.enum import MessageType, MessageDirection, ContactType, ReadStatus
-from pythontextnow.model.Client import Client, ClientConfig
+from pythontextnow.api.Client import Client, ClientConfig
 from pythontextnow.model.Message import Message
 from pythontextnow.model.MultiMediaMessage import MultiMediaMessage
 from pythontextnow.model.TextMessage import TextMessage
