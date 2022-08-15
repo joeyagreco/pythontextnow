@@ -3,6 +3,7 @@ from datetime import datetime
 
 import cloudscraper
 
+from enum_ import MessageType, MessageDirection, ContactType, ReadStatus
 from textnow.model.Client import Client
 
 
@@ -14,11 +15,11 @@ class TextNowAPI:
         client_config = Client.get_client_config()
 
         json_data = {"contact_value": send_to,
-                     "contact_type": 2,
+                     "contact_type": ContactType.DEFAULT.value,
                      "message": message,
-                     "read": 1,
-                     "message_direction": 1,
-                     "message_type": 1,
+                     "read": ReadStatus.READ.value,
+                     "message_direction": MessageDirection.OUTGOING.value,
+                     "message_type": MessageType.MULTIMEDIA.value,
                      "from_name": client_config.username,
                      "has_video": False,
                      "new": True,
