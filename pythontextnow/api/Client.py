@@ -9,7 +9,6 @@ class ClientConfig:
     Used to hold the Client config.
     """
     username: str
-    events: list
     headers: dict
     cookies: dict
 
@@ -34,7 +33,6 @@ class Client:
         }
 
         client_config = ClientConfig(username=username,
-                                     events=list(),
                                      headers=headers,
                                      cookies=cookies)
         cls.client_config = client_config
