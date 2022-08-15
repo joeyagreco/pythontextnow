@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+from urllib.parse import quote
 
 import cloudscraper
 
@@ -17,6 +18,7 @@ class TextNowAPI:
 
         self.__BASE_URL = ConfigReader.get("api", "textnow_base_url")
         self.__API_ROUTE = ConfigReader.get("api", "api_route")
+        self.__CONVERSATIONS_ROUTE = ConfigReader.get("api", "conversations_route")
         self.__MESSAGES_ROUTE = ConfigReader.get("api", "messages_route")
         self.__USERS_ROUTE = ConfigReader.get("api", "users_route")
 
@@ -63,3 +65,22 @@ class TextNowAPI:
             elif message_type == MessageType.MULTIMEDIA:
                 all_messages.append(MultiMediaMessage.from_dict(message_dict))
         return all_messages
+
+    def mark_message_as_read(self, message: Message) -> None:
+
+        clean_number = quote(message.number)
+        url = f"{self.__BASE_URL}{self.__API_ROUTE}{self.__USERS_ROUTE}/{self.__client_config.username}{self.__CONVERSATIONS_ROUTE}/{clean_number}"
+
+        params = {
+            "latest_message_id": message.id_,
+            "http_method": "PATCH"
+        }
+
+        data = {"read": True}
+
+        response = self.__scraper.post(url,
+                                       params=params,
+                                       data=data,
+                                       cookies=self.__client_config.cookies,
+                                       headers=self.__client_config.headers)
+        response.raise_for_status()

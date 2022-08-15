@@ -35,7 +35,3 @@ class Message:
                        id_=id_,
                        direction=direction,
                        raw=raw)
-
-    def mark_as_read(self):
-        from textnow.model.Client import Client
-        Client.patch(Client.get_client_config(), self, {"read": True})
