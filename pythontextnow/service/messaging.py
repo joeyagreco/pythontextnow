@@ -45,9 +45,15 @@ def get_all_unread_messages():
     return [message for message in all_messages if not message.read]
 
 
-def mark_message_as_read(message: Message) -> None:
+def mark_as_read(*, message: Message = None, messages: list[Message] = None) -> None:
     """
-    Marks the given message as read.
+    Marks the given message/s as read.
     """
+    if message is None and messages is None:
+        raise ValueError("'message' and 'messages' cannot both be None.")
+    all_messages = messages
+    if all_messages is None:
+        all_messages = [message]
     text_now_api = TextNowAPI()
-    text_now_api.mark_message_as_read(message)
+    for message in all_messages:
+        text_now_api.mark_message_as_read(message)
