@@ -95,15 +95,15 @@ class Client:
         """
             Gets inbound messages
         """
-        messages = cls.__get_messages()
+        messages = cls.get_messages()
         messages = [Message(msg) for msg in messages if msg.direction == cls.__RECEIVED_MESSAGE_TYPE]
         time.sleep(1)
         return messages
 
     @classmethod
-    def __get_messages(cls) -> list[Message]:
+    def get_messages(cls) -> list[Message]:
         """
-        This gets most of the messages both sent and received. However, it won't get all of them just the past 10-15
+        This gets the sent and received messages.
         """
         client_config = cls.get_client_config()
         response = cls.client_config.scraper.get(
@@ -168,7 +168,7 @@ class Client:
         """
         Gets inbound messages
         """
-        messages = cls.__get_messages()
+        messages = cls.get_messages()
         messages = [msg for msg in messages if msg.direction == cls.__RECEIVED_MESSAGE_TYPE]
         time.sleep(1)
         return messages
