@@ -28,6 +28,8 @@ class Client:
 
     @classmethod
     def set_client_config(cls, username: str, sid_cookie: str, csrf_cookie: str) -> None:
+        from textnow.api.TextNowAPI import TextNowAPI
+        text_now_api = TextNowAPI()
         scraper = cloudscraper.create_scraper()
         cookies = {
             'connect.sid': sid_cookie,
@@ -36,7 +38,7 @@ class Client:
         headers = {
             'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
                           'Chrome/88.0.4324.104 Safari/537.36 ',
-            'x-csrf-token': cls.__get_initial_csrf_token(scraper, cookies)
+            'x-csrf-token': text_now_api.get_csrf_token(cookies)
         }
 
         client_config = ClientConfig(username=username,
@@ -49,16 +51,3 @@ class Client:
     @classmethod
     def get_client_config(cls) -> ClientConfig:
         return cls.client_config
-
-    @classmethod
-    def __get_initial_csrf_token(cls, scraper, cookies: dict):
-        response = scraper.get('https://www.textnow.com/messaging', cookies=cookies)
-        response.raise_for_status()
-
-        resp = response.text
-        needle = 'csrf-token" content="'
-        needle_index = resp.find(needle)
-        token_start = needle_index + len(needle)
-        token_end = resp.find('"', token_start)
-        csrf_token = resp[token_start:token_end]
-        return csrf_token

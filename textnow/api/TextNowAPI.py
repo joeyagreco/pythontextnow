@@ -20,11 +20,26 @@ class TextNowAPI:
         self.__API_ROUTE = ConfigReader.get("api", "api_route")
         self.__CONVERSATIONS_ROUTE = ConfigReader.get("api", "conversations_route")
         self.__MESSAGES_ROUTE = ConfigReader.get("api", "messages_route")
+        self.__MESSAGING_ROUTE = ConfigReader.get("api", "messaging_route")
         self.__USERS_ROUTE = ConfigReader.get("api", "users_route")
 
     @property
     def __client_config(self) -> ClientConfig:
         return Client.get_client_config()
+
+    def get_csrf_token(self, cookies: dict) -> str:
+        response = self.__scraper.get(f"{self.__BASE_URL}{self.__MESSAGING_ROUTE}",
+                                      cookies=cookies)
+
+        response.raise_for_status()
+
+        resp = response.text
+        needle = 'csrf-token" content="'
+        needle_index = resp.find(needle)
+        token_start = needle_index + len(needle)
+        token_end = resp.find('"', token_start)
+        csrf_token = resp[token_start:token_end]
+        return csrf_token
 
     def send_message(self, message: str, send_to: str) -> None:
         json_data = {"contact_value": send_to,
