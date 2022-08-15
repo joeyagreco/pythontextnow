@@ -1,12 +1,9 @@
 from __future__ import annotations
 
-import time
 from dataclasses import dataclass
 from typing import Any
 
 import cloudscraper
-
-from textnow.model.Message import Message
 
 
 @dataclass(kw_only=True, frozen=True)
@@ -65,43 +62,3 @@ class Client:
         token_end = resp.find('"', token_start)
         csrf_token = resp[token_start:token_end]
         return csrf_token
-
-    # def __on_exit(self):
-    #     if len(self.events) == 0:
-    #         return
-    #
-    #     while True:
-    #         for event, func in self.events:
-    #             if event == "message":
-    #                 unread_msgs = self.__get_unread_messages()
-    #                 for msg in unread_msgs:
-    #                     msg.mark_as_read()
-    #                     func(msg)
-    #         time.sleep(1)
-
-    @classmethod
-    def __get_unread_messages(cls):
-        new_messages = cls.__get_received_messages()
-        new_messages = [msg for msg in new_messages if not msg.read]
-        time.sleep(1)
-        return new_messages
-
-    @classmethod
-    def __get_received_messages(cls) -> list[Message]:
-        """
-            Gets inbound messages
-        """
-        messages = cls.get_messages()
-        messages = [Message(msg) for msg in messages if msg.direction == cls.__RECEIVED_MESSAGE_TYPE]
-        time.sleep(1)
-        return messages
-
-    @classmethod
-    def get_received_messages(cls) -> list[Message]:
-        """
-        Gets inbound messages
-        """
-        messages = cls.get_messages()
-        messages = [msg for msg in messages if msg.direction == cls.__RECEIVED_MESSAGE_TYPE]
-        time.sleep(1)
-        return messages
