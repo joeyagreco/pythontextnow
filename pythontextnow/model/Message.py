@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime
 
-from textnow.enum import MessageType, MessageDirection
+from pythontextnow.enum import MessageType, MessageDirection
 
 
 @dataclass(kw_only=True)

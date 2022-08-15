@@ -4,12 +4,12 @@ from urllib.parse import quote
 
 import cloudscraper
 
-from textnow.enum import MessageType, MessageDirection, ContactType, ReadStatus
-from textnow.model.Client import Client, ClientConfig
-from textnow.model.Message import Message
-from textnow.model.MultiMediaMessage import MultiMediaMessage
-from textnow.model.TextMessage import TextMessage
-from textnow.util.ConfigReader import ConfigReader
+from pythontextnow.enum import MessageType, MessageDirection, ContactType, ReadStatus
+from pythontextnow.model.Client import Client, ClientConfig
+from pythontextnow.model.Message import Message
+from pythontextnow.model.MultiMediaMessage import MultiMediaMessage
+from pythontextnow.model.TextMessage import TextMessage
+from pythontextnow.util.ConfigReader import ConfigReader
 
 
 class TextNowAPI:

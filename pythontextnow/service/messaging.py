@@ -1,7 +1,7 @@
-from textnow.api.TextNowAPI import TextNowAPI
-from textnow.enum import MessageDirection
-from textnow.model.Message import Message
-from textnow.util import general
+from pythontextnow.api.TextNowAPI import TextNowAPI
+from pythontextnow.enum import MessageDirection
+from pythontextnow.model.Message import Message
+from pythontextnow.util import general
 
 
 def send_sms(message: str, send_to: str):

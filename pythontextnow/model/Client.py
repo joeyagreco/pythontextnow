@@ -26,7 +26,7 @@ class Client:
 
     @classmethod
     def set_client_config(cls, username: str, sid_cookie: str, csrf_cookie: str) -> None:
-        from textnow.api.TextNowAPI import TextNowAPI
+        from pythontextnow.api.TextNowAPI import TextNowAPI
         text_now_api = TextNowAPI()
         scraper = cloudscraper.create_scraper()
         cookies = {

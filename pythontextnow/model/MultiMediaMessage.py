@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from textnow.model.Message import Message
+from pythontextnow.model.Message import Message
 
 
 @dataclass

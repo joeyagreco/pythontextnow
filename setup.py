@@ -1,14 +1,14 @@
 import setuptools
 
 pkg_vars = dict()
-with open("textnow/_version.py") as f:
+with open("pythontextnow/_version.py") as f:
     exec(f.read(), pkg_vars)
 
 with open("README.md") as f:
     read_me = f.read()
 
 setuptools.setup(
-    name="textnow",
+    name="pythontextnow",
     version=pkg_vars["__version__"],
     author="Joey Greco",
     author_email="joeyagreco@gmail.com",
