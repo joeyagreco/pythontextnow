@@ -1,4 +1,5 @@
 from textnow.api.TextNowAPI import TextNowAPI
+from textnow.enum import MessageDirection
 from textnow.model.Message import Message
 from textnow.util import general
 
@@ -14,7 +15,16 @@ def send_sms(message: str, send_to: str):
 
 def get_all_messages() -> list[Message]:
     """
-    This gets all sent and received messages.
+    This gets the last 30 sent and received messages.
     """
     text_now_api = TextNowAPI()
     return text_now_api.get_all_messages()
+
+
+def get_sent_messages():
+    """
+    This gets the last 30 messages sent by your account.
+    """
+    all_messages = get_all_messages()
+    return [message for message in all_messages if
+            MessageDirection.from_value(message.direction) == MessageDirection.OUTGOING]
