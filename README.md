@@ -19,6 +19,39 @@ Use the package manager [pip](https://pip.pypa.io/en/stable/) to install.
 pip install pythontextnow
 ```
 
+## Usage
+
+Make sure you have the following before you begin:
+
+- TextNow username
+- CSRF cookie
+- SID cookie
+
+For a guide on how to obtain these for your account, check [here](https://github.com/joeyagreco/pythontextnow#setup).
+
+Before you can call any methods, you must first set up your client config.
+
+```python3
+from pythontextnow.api.Client import Client
+
+USERNAME = "{your_username}"
+SID_COOKIE = "{your_sid_cookie}"
+CSRF_COOKIE = "{your_csrf_cookie}"
+
+Client.set_client_config(username=USERNAME, sid_cookie=SID_COOKIE, csrf_cookie=CSRF_COOKIE)
+```
+
+The MessageService is how you will perform any action.
+
+It takes a phone number which defines which conversation you would like to perform an action on.
+
+```python3
+from pythontextnow.service.MessageService import MessageService
+
+PHONE_NUMBER = "{phone_number}"
+message_service = MessageService(conversation_phone_number=PHONE_NUMBER)
+```
+
 ## Setup
 
 ### Obtaining Your Cookies
