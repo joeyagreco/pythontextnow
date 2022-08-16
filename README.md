@@ -2,7 +2,7 @@
 
 <br>
 <br>
-<img src="https://raw.githubusercontent.com/joeyagreco/pythontextnow/main/img/pythontextnow_logo.png" alt="textnow logo" width="400"/>
+<img src="https://raw.githubusercontent.com/joeyagreco/pythontextnow/main/img/pythontextnow_logo.png" alt="textnow logo" width="450"/>
 
 A Python wrapper for TextNow.
 
