@@ -1,6 +1,7 @@
 import json
 import urllib
 from datetime import datetime
+from typing import Optional
 from urllib.parse import quote
 
 import requests
@@ -21,6 +22,8 @@ class TextNowAPI:
         self.__MESSAGES_ROUTE = ConfigReader.get("api", "messages_route")
         self.__MESSAGING_ROUTE = ConfigReader.get("api", "messaging_route")
         self.__USERS_ROUTE = ConfigReader.get("api", "users_route")
+
+        self.__MAX_MESSAGE_RESPONSE_SIZE = 30
 
     @property
     def __client_config(self) -> ClientConfig:
@@ -80,14 +83,18 @@ class TextNowAPI:
                 all_messages.append(MultiMediaMessage.from_dict(message_dict))
         return all_messages
 
-    def get_messages(self, conversation_phone_number: str, *, start_message_id: str = None, page_size: int,
-                     get_archived: bool) -> list[Message]:
+    def get_messages(self, conversation_phone_number: str,
+                     *,
+                     start_message_id: Optional[str] = None,
+                     page_size: Optional[int],
+                     get_archived: Optional[bool]) -> list[Message]:
         """
         This gets messages from the conversation with the given phone number.
 
         This will get all messages before (but not including) the message with the given start_message_id.
+        If the given page_size is greater than the max allowed (30), will default to 30.
         """
-        print(f"getting messages for id: {start_message_id}")
+        page_size = page_size if page_size <= self.__MAX_MESSAGE_RESPONSE_SIZE else self.__MAX_MESSAGE_RESPONSE_SIZE
         params = {
             "contact_value": f"+{conversation_phone_number}",
             "direction": "past",
