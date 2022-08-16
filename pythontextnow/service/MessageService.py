@@ -1,3 +1,4 @@
+import time
 from typing import Optional, Generator
 
 from pythontextnow.api.TextNowAPI import TextNowAPI
@@ -11,6 +12,7 @@ class MessageService:
         self.__conversation_phone_number = conversation_phone_number
 
         self.__text_now_api = TextNowAPI()
+        self.__API_CALL_COOLDOWN_SECONDS = 1
 
     def send_sms(self, *, message: str):
         """
@@ -31,17 +33,25 @@ class MessageService:
             - num_messages is the number of messages to return before stopping iteration
             - if num_messages is not given, this generator will keep yielding until there are no more messages found
             - The returned message list will be ordered most recent -> least recent
+            - This enforces a cooldown time between each call
         """
         start_message_id: Optional[str] = None
 
+        last_call_time = None
         messages_yielded = 0
         page_size = num_messages
 
-        while num_messages is None or messages_yielded < num_messages:
+        while num_messages is None or messages_yielded < num_messages and page_size > 0:
+            if last_call_time is not None:
+                time_since_last_call = last_call_time - time.time()
+                if time_since_last_call < self.__API_CALL_COOLDOWN_SECONDS:
+                    # cooldown
+                    time.sleep(self.__API_CALL_COOLDOWN_SECONDS)
             messages = self.__text_now_api.get_messages(self.__conversation_phone_number,
                                                         start_message_id=start_message_id,
                                                         get_archived=include_archived,
                                                         page_size=page_size)
+            last_call_time = time.time()
             if len(messages) > 0:
                 start_message_id = messages[-1].id_
                 messages_yielded += len(messages)
@@ -53,6 +63,7 @@ class MessageService:
     def mark_as_read(self, *, message: Message = None, messages: list[Message] = None) -> None:
         """
         Marks the given message/s as read.
+        This enforces a cooldown time between each call.
         """
         if message is None and messages is None:
             raise ValueError("'message' and 'messages' cannot both be None.")
@@ -61,3 +72,4 @@ class MessageService:
             all_messages = [message]
         for message in all_messages:
             self.__text_now_api.mark_message_as_read(message)
+            time.sleep(self.__API_CALL_COOLDOWN_SECONDS)
