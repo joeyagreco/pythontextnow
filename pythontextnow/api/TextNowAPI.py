@@ -64,25 +64,6 @@ class TextNowAPI:
             data=data)
         response.raise_for_status()
 
-    def get_all_messages(self) -> list[Message]:
-        response = requests.get(
-            f"{self.__BASE_URL}{self.__API_ROUTE}{self.__USERS_ROUTE}/{self.__client_config.username}{self.__MESSAGES_ROUTE}",
-            headers=self.__client_config.headers,
-            cookies=self.__client_config.cookies)
-        response.raise_for_status()
-
-        message_dicts = json.loads(response.content)["messages"]
-
-        all_messages = list()
-        # sort into Text and MultiMedia messages
-        for message_dict in message_dicts:
-            message_type = MessageType.from_value(message_dict["message_type"])
-            if message_type == MessageType.TEXT:
-                all_messages.append(TextMessage.from_dict(message_dict))
-            elif message_type == MessageType.MULTIMEDIA:
-                all_messages.append(MultiMediaMessage.from_dict(message_dict))
-        return all_messages
-
     def get_messages(self, conversation_phone_number: str,
                      *,
                      start_message_id: Optional[str] = None,

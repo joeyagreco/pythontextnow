@@ -1,7 +1,6 @@
 from typing import Optional, Generator
 
 from pythontextnow.api.TextNowAPI import TextNowAPI
-from pythontextnow.enum import MessageDirection
 from pythontextnow.model.Message import Message
 from pythontextnow.util import general
 
@@ -13,22 +12,16 @@ class MessageService:
 
         self.__text_now_api = TextNowAPI()
 
-    def send_sms(self, *, message: str, send_to: str):
+    def send_sms(self, *, message: str):
         """
-        Sends an sms text message to this number.
+        Sends an sms text message to this instance's conversation_phone_number.
         """
         message = general.replace_newlines(message)
-        self.__text_now_api.send_message(message=message, send_to=send_to)
-
-    def get_all_messages(self) -> list[Message]:
-        """
-        This gets the last 30 sent and received messages.
-        """
-        return self.__text_now_api.get_all_messages()
+        self.__text_now_api.send_message(message=message, send_to=self.__conversation_phone_number)
 
     def get_messages(self,
                      *,
-                     num_messages: int = None,
+                     num_messages: Optional[int] = None,
                      include_archived: bool = True) -> Generator[list[Message], None, None]:
         """
         This yields the last n messages in the conversation with this instance's conversation_phone_number.
@@ -56,27 +49,6 @@ class MessageService:
                 yield messages
             else:
                 return
-
-    def get_all_incoming_messages(self) -> list[Message]:
-        """
-        Gets all incoming messages.
-        """
-        all_messages = self.get_all_messages()
-        return [message for message in all_messages if message.direction == MessageDirection.INCOMING]
-
-    def get_all_outgoing_messages(self) -> list[Message]:
-        """
-        This all messages sent by your account.
-        """
-        all_messages = self.get_all_messages()
-        return [message for message in all_messages if message.direction == MessageDirection.OUTGOING]
-
-    def get_all_unread_messages(self):
-        """
-        Gets all unread messages.
-        """
-        all_messages = self.get_all_messages()
-        return [message for message in all_messages if not message.read]
 
     def mark_as_read(self, *, message: Message = None, messages: list[Message] = None) -> None:
         """
