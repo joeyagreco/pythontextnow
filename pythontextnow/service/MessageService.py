@@ -13,6 +13,7 @@ class MessageService:
 
         self.__text_now_api = TextNowAPI()
         self.__API_CALL_COOLDOWN_SECONDS = 1
+        self.__DEFAULT_PAGE_SIZE = 30
 
     def send_sms(self, *, message: str):
         """
@@ -39,6 +40,7 @@ class MessageService:
 
         last_call_time = None
         messages_yielded = 0
+        num_messages = num_messages if num_messages is not None else self.__DEFAULT_PAGE_SIZE
         page_size = num_messages
 
         while num_messages is None or messages_yielded < num_messages and page_size > 0:
