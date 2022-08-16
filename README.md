@@ -35,7 +35,7 @@ To find this username:
 
 ### Obtaining Your Username
 
-You will need a CSRF cookie and a SID cookie to utilize this library.
+You will need a CSRF cookie and an SID cookie to utilize this library.
 
 To find these cookies:
 
