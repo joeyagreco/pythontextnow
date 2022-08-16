@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/joeyagreco/pythontextnow/main/img/textnow_logo_cropped.png" alt="textnow logo" width="450"/>
+<img src="" alt="textnow logo" width="450"/>
 
 Python wrapper for the MyFantasyLeague API.
 
