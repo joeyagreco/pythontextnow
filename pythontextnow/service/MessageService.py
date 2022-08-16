@@ -73,3 +73,9 @@ class MessageService:
         for message in all_messages:
             self.__text_now_api.mark_message_as_read(message)
             time.sleep(self.__API_CALL_COOLDOWN_SECONDS)
+
+    def delete_message(self, *, message: Optional[Message] = None, message_id: Optional[str] = None) -> None:
+        """
+        Deletes the given message or message with the given ID.
+        """
+        self.__text_now_api.delete_message(message=message, message_id=message_id)

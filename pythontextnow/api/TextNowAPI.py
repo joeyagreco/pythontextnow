@@ -123,3 +123,18 @@ class TextNowAPI:
                                  cookies=self.__client_config.cookies,
                                  headers=self.__client_config.headers)
         response.raise_for_status()
+
+    def delete_message(self, *, message: Optional[Message] = None, message_id: Optional[str] = None) -> None:
+        """
+        Deletes the given message or message with the given ID.
+        """
+        if message is None and message_id is None:
+            raise ValueError("'message' and 'message_id' cannot both be None.")
+
+        message_id = message_id if message_id is not None else message.id_
+
+        url = f"{self.__BASE_URL}{self.__API_ROUTE}{self.__USERS_ROUTE}/{self.__client_config.username}{self.__MESSAGES_ROUTE}/{message_id}"
+        response = requests.delete(url,
+                                   cookies=self.__client_config.cookies,
+                                   headers=self.__client_config.headers)
+        response.raise_for_status()
