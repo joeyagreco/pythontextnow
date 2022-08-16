@@ -45,7 +45,7 @@ Client.set_client_config(username=USERNAME, sid_cookie=SID_COOKIE, csrf_cookie=C
 
 The MessageService is how you will perform any action.
 
-It takes a phone number which defines which conversation you would like to perform an action on.
+It takes a phone number which defines which conversation you would like to perform your actions on.
 
 ```python3
 from pythontextnow.service.MessageService import MessageService
@@ -113,6 +113,26 @@ its [Message](https://github.com/joeyagreco/pythontextnow/blob/main/pythontextno
 # assume you had a Message object saved to the variable "message"
 
 message_service.delete_message(message=message)
+```
+
+### Mark a Message as Read
+
+To mark a message as read, use the `mark_as_read()` method.
+
+Mark a single message as read.
+
+```python3
+# assume you had a Message object saved to the variable "message"
+
+message_service.mark_as_read(message=message)
+```
+
+Mark a list of messages as read.
+
+```python3
+# assume you had a list of Message objects saved to the variable "message_list"
+
+message_service.mark_as_read(messages=message_list)
 ```
 
 ## Setup
