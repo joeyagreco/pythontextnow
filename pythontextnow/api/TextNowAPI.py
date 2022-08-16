@@ -1,4 +1,5 @@
 import json
+import urllib
 from datetime import datetime
 from urllib.parse import quote
 
@@ -63,6 +64,39 @@ class TextNowAPI:
     def get_all_messages(self) -> list[Message]:
         response = requests.get(
             f"{self.__BASE_URL}{self.__API_ROUTE}{self.__USERS_ROUTE}/{self.__client_config.username}{self.__MESSAGES_ROUTE}",
+            headers=self.__client_config.headers,
+            cookies=self.__client_config.cookies)
+        response.raise_for_status()
+
+        message_dicts = json.loads(response.content)["messages"]
+
+        all_messages = list()
+        # sort into Text and MultiMedia messages
+        for message_dict in message_dicts:
+            message_type = MessageType.from_value(message_dict["message_type"])
+            if message_type == MessageType.TEXT:
+                all_messages.append(TextMessage.from_dict(message_dict))
+            elif message_type == MessageType.MULTIMEDIA:
+                all_messages.append(MultiMediaMessage.from_dict(message_dict))
+        return all_messages
+
+    def get_messages(self, conversation_phone_number: str, *, start_message_id: str, page_size: int,
+                     get_archived: bool) -> list[Message]:
+        """
+        This gets messages from the conversation with the given phone number.
+        """
+        params = {
+            "contact_value": f"%2b{conversation_phone_number}",
+            "start_message_id": start_message_id,
+            "direction": "past",
+            "page_size": page_size,
+            "get_archived": 1 if get_archived else 0
+        }
+        base_url = f"{self.__BASE_URL}{self.__API_ROUTE}{self.__USERS_ROUTE}/{self.__client_config.username}{self.__MESSAGES_ROUTE}"
+        url_with_params = f"{base_url}{urllib.parse.urlencode(params)}"
+
+        response = requests.get(
+            url_with_params,
             headers=self.__client_config.headers,
             cookies=self.__client_config.cookies)
         response.raise_for_status()
