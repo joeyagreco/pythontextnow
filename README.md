@@ -29,6 +29,8 @@ Make sure you have the following before you begin:
 
 For a guide on how to obtain these for your account, check [here](https://github.com/joeyagreco/pythontextnow#setup).
 
+### Configure Client
+
 Before you can call any methods, you must first set up your client config.
 
 ```python3
@@ -50,6 +52,67 @@ from pythontextnow.service.MessageService import MessageService
 
 PHONE_NUMBER = "{phone_number}"
 message_service = MessageService(conversation_phone_number=PHONE_NUMBER)
+```
+
+### Get Messages
+
+The `get_messages()` method will return a [generator object](https://docs.python.org/3/glossary.html#term-generator).
+
+This will return the messages from most -> least recent.
+
+You can call `next()` with the returned generator each time you want to get the next group of messages.
+
+```python3
+messages_generator = message_service.get_messages()
+
+messages = next(messages_generator)
+```
+
+You can also use a for loop to get all messages in a conversation.
+
+```python3
+messages_generator = message_service.get_messages()
+
+all_messages = list()
+for message_list in messages_generator:
+    all_messages += message_list
+```
+
+You can specify how many messages back you would like to be retrieved by using the `num_messages` keyword argument.
+
+```python3
+messages_generator = message_service.get_messages(num_messages=10)
+
+all_messages = list()
+for message_list in messages_generator:
+    all_messages += message_list
+```
+
+### Send a Message
+
+To send a text message, use the `send_message()` method.
+
+```python3
+message_service.send_message(message="Hello World!")
+```
+
+### Delete a Message
+
+To delete a message, use the `delete_message()` method.
+
+Delete a message by its ID.
+
+```python3
+message_service.delete_message(message_id="123456")
+```
+
+Delete a message with
+its [Message](https://github.com/joeyagreco/pythontextnow/blob/main/pythontextnow/model/Message.py) object
+
+```python3
+# assume you had a Message object saved to the variable "message"
+
+message_service.delete_message(message=message)
 ```
 
 ## Setup
