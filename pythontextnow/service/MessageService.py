@@ -15,9 +15,9 @@ class MessageService:
         self.__API_CALL_COOLDOWN_SECONDS = 1
         self.__DEFAULT_PAGE_SIZE = 30
 
-    def send_sms(self, *, message: str):
+    def send_message(self, *, message: str):
         """
-        Sends an sms text message to this instance's conversation_phone_number.
+        Sends a text message to this instance's conversation_phone_number.
         """
         message = general.replace_newlines(message)
         self.__text_now_api.send_message(message=message, send_to=self.__conversation_phone_number)
