@@ -80,20 +80,24 @@ class TextNowAPI:
                 all_messages.append(MultiMediaMessage.from_dict(message_dict))
         return all_messages
 
-    def get_messages(self, conversation_phone_number: str, *, start_message_id: str, page_size: int,
+    def get_messages(self, conversation_phone_number: str, *, start_message_id: str = None, page_size: int,
                      get_archived: bool) -> list[Message]:
         """
         This gets messages from the conversation with the given phone number.
+
+        This will get all messages before (but not including) the message with the given start_message_id.
         """
+        print(f"getting messages for id: {start_message_id}")
         params = {
-            "contact_value": f"%2b{conversation_phone_number}",
-            "start_message_id": start_message_id,
+            "contact_value": f"+{conversation_phone_number}",
             "direction": "past",
             "page_size": page_size,
             "get_archived": 1 if get_archived else 0
         }
+        if start_message_id is not None:
+            params["start_message_id"] = start_message_id
         base_url = f"{self.__BASE_URL}{self.__API_ROUTE}{self.__USERS_ROUTE}/{self.__client_config.username}{self.__MESSAGES_ROUTE}"
-        url_with_params = f"{base_url}{urllib.parse.urlencode(params)}"
+        url_with_params = f"{base_url}?{urllib.parse.urlencode(params)}"
 
         response = requests.get(
             url_with_params,

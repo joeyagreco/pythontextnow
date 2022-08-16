@@ -1,3 +1,5 @@
+from typing import Optional, Generator
+
 from pythontextnow.api.TextNowAPI import TextNowAPI
 from pythontextnow.enum import MessageDirection
 from pythontextnow.model.Message import Message
@@ -19,6 +21,33 @@ def get_all_messages() -> list[Message]:
     """
     text_now_api = TextNowAPI()
     return text_now_api.get_all_messages()
+
+
+def get_messages(*, conversation_phone_number: str,
+                 response_size: int = None,
+                 include_archived: bool = True) -> Generator[list[Message], None, None]:
+    """
+    This yields the last n messages in the conversation with the given phone number.
+    Where: n = 30 or response_size if given.
+
+    THINGS TO NOTE:
+        - 30 is the max for response_size
+        - The returned message list will be ordered most recent -> least recent
+    """
+    response_size = response_size if response_size is not None else 30  # TODO: put this in a constant somewhere
+    text_now_api = TextNowAPI()
+    start_message_id: Optional[str] = None
+
+    while True:
+        messages = text_now_api.get_messages(conversation_phone_number,
+                                             start_message_id=start_message_id,
+                                             page_size=response_size,
+                                             get_archived=include_archived)
+        if len(messages) > 0:
+            start_message_id = messages[-1].id_
+            yield messages
+        else:
+            return
 
 
 def get_all_incoming_messages() -> list[Message]:
