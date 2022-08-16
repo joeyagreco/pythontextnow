@@ -11,26 +11,27 @@ class MessageService:
     def __init__(self, *, conversation_phone_number: str):
         self.__conversation_phone_number = conversation_phone_number
 
+        self.__text_now_api = TextNowAPI()
+
     def send_sms(self, *, message: str, send_to: str):
         """
         Sends an sms text message to this number.
         """
         message = general.replace_newlines(message)
-        text_now_api = TextNowAPI()
-        text_now_api.send_message(message=message, send_to=send_to)
+        self.__text_now_api.send_message(message=message, send_to=send_to)
 
     def get_all_messages(self) -> list[Message]:
         """
         This gets the last 30 sent and received messages.
         """
-        text_now_api = TextNowAPI()
-        return text_now_api.get_all_messages()
+        return self.__text_now_api.get_all_messages()
 
-    def get_messages(self, *, conversation_phone_number: str,
+    def get_messages(self,
+                     *,
                      num_messages: int = None,
                      include_archived: bool = True) -> Generator[list[Message], None, None]:
         """
-        This yields the last n messages in the conversation with the given phone number.
+        This yields the last n messages in the conversation with this instance's conversation_phone_number.
         Where: n = 30 or response_size if given.
 
         THINGS TO NOTE:
@@ -38,17 +39,16 @@ class MessageService:
             - if num_messages is not given, this generator will keep yielding until there are no more messages found
             - The returned message list will be ordered most recent -> least recent
         """
-        text_now_api = TextNowAPI()
         start_message_id: Optional[str] = None
 
         messages_yielded = 0
         page_size = num_messages
 
         while num_messages is None or messages_yielded < num_messages:
-            messages = text_now_api.get_messages(conversation_phone_number,
-                                                 start_message_id=start_message_id,
-                                                 get_archived=include_archived,
-                                                 page_size=page_size)
+            messages = self.__text_now_api.get_messages(self.__conversation_phone_number,
+                                                        start_message_id=start_message_id,
+                                                        get_archived=include_archived,
+                                                        page_size=page_size)
             if len(messages) > 0:
                 start_message_id = messages[-1].id_
                 messages_yielded += len(messages)
@@ -87,6 +87,5 @@ class MessageService:
         all_messages = messages
         if all_messages is None:
             all_messages = [message]
-        text_now_api = TextNowAPI()
         for message in all_messages:
-            text_now_api.mark_message_as_read(message)
+            self.__text_now_api.mark_message_as_read(message)
