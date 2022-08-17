@@ -9,12 +9,12 @@ from pythontextnow.enum import MessageType, MessageDirection
 @dataclass(kw_only=True)
 class Message:
     number: str
-    date: datetime
+    datetime_: datetime
     first_contact: bool
-    type_: MessageType
+    message_type: MessageType
     read: bool
     id_: str
-    direction: MessageDirection
+    message_direction: MessageDirection
     raw: dict
 
     @classmethod
@@ -28,10 +28,10 @@ class Message:
         direction = MessageDirection.from_value(message_dict["message_direction"])
         raw = message_dict
         return Message(number=number,
-                       date=date,
+                       datetime_=date,
                        first_contact=first_contact,
-                       type_=type_,
+                       message_type=type_,
                        read=read,
                        id_=id_,
-                       direction=direction,
+                       message_direction=direction,
                        raw=raw)

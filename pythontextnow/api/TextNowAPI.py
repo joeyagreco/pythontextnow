@@ -97,7 +97,7 @@ class TextNowAPI:
             cookies=self.__client_config.cookies)
         response.raise_for_status()
 
-        message_dicts = json.loads(response.content)["messages"]
+        message_dicts = response.json()["messages"]
 
         all_messages = list()
         # sort into Text and MultiMedia messages
@@ -105,7 +105,7 @@ class TextNowAPI:
             message_type = MessageType.from_value(message_dict["message_type"])
             if message_type == MessageType.TEXT:
                 all_messages.append(TextMessage.from_dict(message_dict))
-            elif message_type == MessageType.MULTIMEDIA:
+            elif message_type in (MessageType.IMAGE, MessageType.VIDEO):
                 all_messages.append(MultiMediaMessage.from_dict(message_dict))
         return all_messages
 
