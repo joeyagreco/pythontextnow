@@ -89,3 +89,4 @@ class TestTextNowAPI(unittest.TestCase):
         self.assertTrue(message.read)
         self.assertEqual(MessageDirection.INCOMING, message.message_direction)
         self.assertEqual(mock_message_dict, message.raw)
+        self.assertEqual("hello world", message.text)
