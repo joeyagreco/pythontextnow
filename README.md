@@ -166,8 +166,9 @@ In **Chrome**:
 
 In **Firefox**
 
+-
 Access [Developer Tools](https://firefox-source-docs.mozilla.org/devtools-user/#:~:text=You%20can%20open%20the%20Firefox,%2B%20Opt%20%2B%20I%20on%20macOS.)
-
+in your browser
 - Click on the "Storage" tab
 - Go to "Storage" -> "Cookies"
 - Search for the "connect.sid" name, the value will be your SID cookie
