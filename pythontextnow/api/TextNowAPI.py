@@ -159,7 +159,7 @@ class TextNowAPI:
 
         return response.json()["result"]
 
-    def upload_raw_media(self, *, attachment_url: str, raw_media: bytes, media_type: type) -> None:
+    def upload_raw_media(self, *, attachment_url: str, raw_media: bytes, media_type: str) -> None:
         """
         Uploads the given raw_media to the given URL.
         """

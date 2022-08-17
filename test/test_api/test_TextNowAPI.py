@@ -180,3 +180,14 @@ class TestTextNowAPI(unittest.TestCase):
 
         self.assertIsInstance(response, str)
         self.assertEqual("https://test", response)
+
+    @mock.patch("requests.put")
+    def test_upload_raw_media_happy_path(self, mock_requests_put):
+        mock_response = MockResponse(dict(), 200)
+        mock_requests_put.return_value = mock_response
+        text_now_api = TextNowAPI()
+        response = text_now_api.upload_raw_media(attachment_url="https://test",
+                                                 raw_media=bytes("some_image_bytes", "utf-8"),
+                                                 media_type="image/png")
+
+        self.assertIsNone(response)
