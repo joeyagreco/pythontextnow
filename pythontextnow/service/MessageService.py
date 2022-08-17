@@ -86,6 +86,12 @@ class MessageService:
         self.__text_now_api.delete_message(message=message, message_id=message_id)
 
     def send_media_message(self, *, file_path: str):
+        """
+        Supports sending:
+            - Images
+            - Videos
+            - GIFs
+        """
 
         media_type = mimetypes.guess_type(file_path)[0]  # will be something like "video/mp4" or "image/png"
         if media_type is None:
