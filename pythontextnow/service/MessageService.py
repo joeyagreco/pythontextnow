@@ -41,8 +41,7 @@ class MessageService:
         start_message_id: Optional[str] = None
 
         messages_yielded = 0
-        num_messages = num_messages if num_messages is not None else self.__DEFAULT_PAGE_SIZE
-        page_size = num_messages
+        page_size = num_messages if num_messages is not None else self.__DEFAULT_PAGE_SIZE
 
         while num_messages is None or messages_yielded < num_messages and page_size > 0:
             messages = self.__text_now_api.get_messages(self.__conversation_phone_number,
@@ -52,7 +51,8 @@ class MessageService:
             if len(messages) > 0:
                 start_message_id = messages[-1].id_
                 messages_yielded += len(messages)
-                page_size -= messages_yielded
+                if num_messages:
+                    page_size -= messages_yielded
                 yield messages
             else:
                 return
