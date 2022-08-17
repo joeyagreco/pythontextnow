@@ -6,6 +6,7 @@ from unittest import mock
 from pythontextnow.api.Client import Client
 from pythontextnow.api.TextNowAPI import TextNowAPI
 from pythontextnow.enum import MessageType, MessageDirection
+from pythontextnow.model.MultiMediaMessage import MultiMediaMessage
 from pythontextnow.model.TextMessage import TextMessage
 from test.helper.helper_classes import MockResponse
 
@@ -90,3 +91,43 @@ class TestTextNowAPI(unittest.TestCase):
         self.assertEqual(MessageDirection.INCOMING, message.message_direction)
         self.assertEqual(mock_message_dict, message.raw)
         self.assertEqual("hello world", message.text)
+
+    @mock.patch("requests.get")
+    def test_get_messages_multi_media_message_happy_path(self, mock_requests_get):
+        mock_message_dict = {
+            "id": "id",
+            "username": "username",
+            "contact_value": "contact_value",
+            "message_direction": 2,
+            "message_type": 2,
+            "message": "https://test",
+            "read": True,
+            "date": "2000-01-01T01:01:00Z",
+            "conversation_filtering": {
+                "first_time_contact": True
+            }
+        }
+        mock_response_dict = {
+            "status": {},
+            "messages": [
+                mock_message_dict
+            ]
+        }
+        mock_response = MockResponse(mock_response_dict, 200)
+        mock_requests_get.return_value = mock_response
+        text_now_api = TextNowAPI()
+        response = text_now_api.get_messages(conversation_phone_number="1111111111", page_size=10, get_archived=True)
+
+        message = response[0]
+        self.assertIsInstance(response, list)
+        self.assertEqual(1, len(response))
+        self.assertIsInstance(message, MultiMediaMessage)
+        self.assertEqual("id", message.id_)
+        self.assertEqual("contact_value", message.number)
+        self.assertEqual(datetime.datetime(2000, 1, 1, 1, 1, tzinfo=datetime.timezone.utc), message.datetime_)
+        self.assertTrue(message.first_contact)
+        self.assertEqual(MessageType.IMAGE, message.message_type)
+        self.assertTrue(message.read)
+        self.assertEqual(MessageDirection.INCOMING, message.message_direction)
+        self.assertEqual(mock_message_dict, message.raw)
+        self.assertEqual("https://test", message.media)
