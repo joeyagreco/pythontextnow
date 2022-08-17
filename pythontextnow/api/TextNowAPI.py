@@ -205,3 +205,4 @@ class TextNowAPI:
                                  data=data,
                                  headers=self.__client_config.headers,
                                  cookies=self.__client_config.cookies)
+        response.raise_for_status()

@@ -191,3 +191,16 @@ class TestTextNowAPI(unittest.TestCase):
                                                  media_type="image/png")
 
         self.assertIsNone(response)
+
+    @mock.patch("requests.post")
+    def test_send_attachment_happy_path(self, mock_requests_post):
+        mock_response = MockResponse(dict(), 200)
+        mock_requests_post.return_value = mock_response
+        text_now_api = TextNowAPI()
+        response = text_now_api.send_attachment(conversation_phone_number="1111111111",
+                                                message_type=MessageType.IMAGE,
+                                                file_type="image",
+                                                is_video=False,
+                                                attachment_url="https://test")
+
+        self.assertIsNone(response)
