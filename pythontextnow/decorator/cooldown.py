@@ -4,6 +4,7 @@ from typing import Callable
 
 from pythontextnow import Client
 from pythontextnow.util.ConfigReader import ConfigReader
+from pythontextnow.util.CustomLogger import CustomLogger
 
 
 def enforce_cooldown(function: Callable) -> Callable:
@@ -16,10 +17,11 @@ def enforce_cooldown(function: Callable) -> Callable:
         client_config = Client.get_client_config()
         now = datetime.datetime.now()
         difference_seconds = (now - client_config.last_call_time).total_seconds()
-        if difference_seconds > cooldown_seconds:
+        if difference_seconds < cooldown_seconds:
             # enforce cooldown
+            CustomLogger.getLogger().warning(f"ENFORCING COOLDOWN FOR {difference_seconds} SECONDS...")
             time.sleep(difference_seconds)
-            Client.update(last_call_time=now)
+        Client.update(last_call_time=now)
         return function(*args, **kwargs)
 
     return wrapFunction
