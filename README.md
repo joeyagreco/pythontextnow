@@ -185,6 +185,14 @@ To find these cookies:
 - Search for the "connect.sid" name, the value will be your SID cookie
 - Search for the "_csrf" name, the value will be your CSRF cookie
 
+## Running Tests
+
+To run tests, run the following command:
+
+```bash
+  pytest
+```
+
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
