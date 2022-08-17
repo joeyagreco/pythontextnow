@@ -87,6 +87,7 @@ class MessageService:
 
     def send_media_message(self, *, file_path: str):
         """
+        Sends the given media to this instance's conversation_phone_number.
         Supports sending:
             - Images
             - Videos
