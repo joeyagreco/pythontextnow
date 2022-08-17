@@ -8,6 +8,7 @@ A Python wrapper for TextNow.
 
 [TextNow Website](https://www.textnow.com/)
 
+![Main Build](https://github.com/joeyagreco/pythontextnow/actions/workflows/main-build.yml/badge.svg)
 ![Last Commit](https://img.shields.io/github/last-commit/joeyagreco/pythontextnow)
 </div>
 
