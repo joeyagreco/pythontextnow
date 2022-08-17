@@ -39,12 +39,12 @@ class TextNowAPI:
 
         response.raise_for_status()
 
-        resp = response.text
+        response_text = response.text
         needle = 'csrf-token" content="'
-        needle_index = resp.find(needle)
+        needle_index = response_text.find(needle)
         token_start = needle_index + len(needle)
-        token_end = resp.find('"', token_start)
-        csrf_token = resp[token_start:token_end]
+        token_end = response_text.find('"', token_start)
+        csrf_token = response_text[token_start:token_end]
         return csrf_token
 
     def send_message(self, *, message: str, send_to: str) -> None:
@@ -53,7 +53,7 @@ class TextNowAPI:
                      "message": message,
                      "read": ReadStatus.READ.value,
                      "message_direction": MessageDirection.OUTGOING.value,
-                     "message_type": MessageType.MULTIMEDIA.value,
+                     "message_type": MessageType.TEXT.value,
                      "from_name": self.__client_config.username,
                      "has_video": False,
                      "new": True,
