@@ -157,3 +157,22 @@ class TextNowAPI:
         response.raise_for_status()
 
         return response.json()["result"]
+
+    def upload_raw_media(self, *, attachment_url: str, raw_media: bytearray, content_type: tuple) -> None:
+        """
+        Uploads the raw_media given to the given URL.
+        """
+        headers = {
+            'accept': '*/*',
+            'content-type': content_type,
+            'accept-language': 'en-US,en;q=0.9',
+            "mode": "cors",
+            "method": "PUT",
+            "credentials": 'omit'
+        }
+
+        response = requests.put(attachment_url,
+                                data=raw_media,
+                                headers=headers,
+                                cookies=self.__client_config.cookies)
+        response.raise_for_status()
