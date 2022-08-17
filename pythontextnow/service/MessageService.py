@@ -94,10 +94,11 @@ class MessageService:
             - GIFs
         """
 
-        media_type = mimetypes.guess_type(file_path)[0]  # will be something like "video/mp4" or "image/png"
-        if media_type is None:
+        mime_type = mimetypes.guess_type(file_path)
+        if mime_type is None:
             raise ValueError("Cannot get media type from media at 'file_path'.")
-        file_type = media_type.split("/")[0]
+        media_type = mime_type[0]  # will be something like "video/mp4" or "image/png"
+        file_type = media_type[0].split("/")[0]  # will be something like "video" or "image" or "gif"
         if file_type in self.__BANNED_MEDIA_TYPES:
             raise ValueError(f"'{file_type} is not an allowed media type.'")
         is_video = file_type == "video"
