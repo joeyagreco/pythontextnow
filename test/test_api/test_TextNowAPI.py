@@ -131,3 +131,21 @@ class TestTextNowAPI(unittest.TestCase):
         self.assertEqual(MessageDirection.INCOMING, message.message_direction)
         self.assertEqual(mock_message_dict, message.raw)
         self.assertEqual("https://test", message.media)
+
+    @mock.patch("requests.patch")
+    def test_mark_message_as_read_happy_path(self, mock_requests_get):
+        mock_response = MockResponse(dict(), 200)
+        mock_requests_get.return_value = mock_response
+        text_now_api = TextNowAPI()
+        dummy_message = TextMessage(text=None,
+                                    number="1111111111",
+                                    datetime_=None,
+                                    first_contact=None,
+                                    message_type=None,
+                                    read=None,
+                                    id_="12345",
+                                    message_direction=None,
+                                    raw=None)
+        response = text_now_api.mark_message_as_read(message=dummy_message)
+
+        self.assertIsNone(response)
