@@ -12,6 +12,23 @@ A Python wrapper for TextNow.
 ![Last Commit](https://img.shields.io/github/last-commit/joeyagreco/pythontextnow)
 </div>
 
+### Table of Contents
+
+- [Installation](https://github.com/joeyagreco/pythontextnow#installation)
+- [Usage](https://github.com/joeyagreco/pythontextnow#usage)
+    - [Configure Client](https://github.com/joeyagreco/pythontextnow#configure-client)
+    - [Get Messages](https://github.com/joeyagreco/pythontextnow#get-messages)
+    - [Send a Message](https://github.com/joeyagreco/pythontextnow#send-a-message)
+    - [Send Media](https://github.com/joeyagreco/pythontextnow#send-media)
+    - [Delete a Message](https://github.com/joeyagreco/pythontextnow#delete-a-message)
+    - [Mark a Message as Read](https://github.com/joeyagreco/pythontextnow#mark-a-message-as-read)
+- [Setup](https://github.com/joeyagreco/pythontextnow#setup)
+    - [Obtaining Your Username](https://github.com/joeyagreco/pythontextnow#obtaining-your-username)
+    - [Obtaining Your Cookies](https://github.com/joeyagreco/pythontextnow#obtaining-your-cookies)
+- [Running Tests](https://github.com/joeyagreco/pythontextnow#running-tests)
+- [Contributing](https://github.com/joeyagreco/pythontextnow#contributing)
+- [License](https://github.com/joeyagreco/pythontextnow#license)
+
 ## Installation
 
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install.
@@ -152,7 +169,7 @@ message_service.mark_as_read(messages=message_list)
 
 ## Setup
 
-### Obtaining Your Cookies
+### Obtaining Your Username
 
 You will need to know your TextNow username to utilize this library.
 
@@ -164,7 +181,7 @@ To find this username:
 - Click "Settings"
 - Your username will be listed under "Account"
 
-### Obtaining Your Username
+### Obtaining Your Cookies
 
 You will need a CSRF cookie and an SID cookie to utilize this library.
 
