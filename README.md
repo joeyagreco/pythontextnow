@@ -155,20 +155,18 @@ You will need a CSRF cookie and an SID cookie to utilize this library.
 
 To find these cookies:
 
-In **Chrome**:
-
 - Go to [TextNow's messaging page](https://www.textnow.com/messaging)
-- Access [Developer Tools](https://developer.chrome.com/docs/devtools/open/) in your browser
-- Click on the "Application" tab
-- Go to "Storage" -> "Cookies"
-- Search for the "connect.sid" name, the value will be your SID cookie
-- Search for the "_csrf" name, the value will be your CSRF cookie
 
-In **Firefox**
+> In **Chrome**:
+> - Access [Developer Tools](https://developer.chrome.com/docs/devtools/open/) in your browser
+> - Click on the "Application" tab
+> - Go to "Storage" -> "Cookies"
 
-- Access [Developer Tools](https://firefox-source-docs.mozilla.org/devtools-user/) in your browser
-- Click on the "Storage" tab
-- Go to "Storage" -> "Cookies"
+> In **Firefox**
+> - Access [Developer Tools](https://firefox-source-docs.mozilla.org/devtools-user/) in your browser
+> - Click on the "Storage" tab
+> - Go to "Storage" -> "Cookies"
+
 - Search for the "connect.sid" name, the value will be your SID cookie
 - Search for the "_csrf" name, the value will be your CSRF cookie
 
