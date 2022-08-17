@@ -2,6 +2,7 @@ import json
 import urllib
 from datetime import datetime
 from typing import Optional
+from urllib import parse
 from urllib.parse import quote
 
 import requests
@@ -17,7 +18,9 @@ from pythontextnow.util.ConfigReader import ConfigReader
 class TextNowAPI:
     def __init__(self):
         self.__BASE_URL = ConfigReader.get("api", "textnow_base_url")
+        self.__VERSION = ConfigReader.get("api", "version")
         self.__API_ROUTE = ConfigReader.get("api", "api_route")
+        self.__ATTACHMENT_URL_ROUTE = ConfigReader.get("api", "attachment_url_route")
         self.__CONVERSATIONS_ROUTE = ConfigReader.get("api", "conversations_route")
         self.__MESSAGES_ROUTE = ConfigReader.get("api", "messages_route")
         self.__MESSAGING_ROUTE = ConfigReader.get("api", "messaging_route")
@@ -138,3 +141,19 @@ class TextNowAPI:
                                    cookies=self.__client_config.cookies,
                                    headers=self.__client_config.headers)
         response.raise_for_status()
+
+    def get_attachment_url(self) -> str:
+        """
+        Gets the URL that a file can be uploaded to.
+        """
+        url = f"{self.__BASE_URL}{self.__API_ROUTE}/{self.__VERSION}{self.__ATTACHMENT_URL_ROUTE}"
+        params = {"message_type": 2}
+        url_with_params = f"{url}&{parse.urlencode(params)}"
+
+        response = requests.get(
+            url_with_params,
+            headers=self.__client_config.headers,
+            cookies=self.__client_config.cookies)
+        response.raise_for_status()
+
+        return response.json()["result"]
