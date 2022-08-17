@@ -133,9 +133,9 @@ class TestTextNowAPI(unittest.TestCase):
         self.assertEqual("https://test", message.media)
 
     @mock.patch("requests.patch")
-    def test_mark_message_as_read_happy_path(self, mock_requests_get):
+    def test_mark_message_as_read_happy_path(self, mock_requests_patch):
         mock_response = MockResponse(dict(), 200)
-        mock_requests_get.return_value = mock_response
+        mock_requests_patch.return_value = mock_response
         text_now_api = TextNowAPI()
         dummy_message = TextMessage(text=None,
                                     number="1111111111",
@@ -147,5 +147,23 @@ class TestTextNowAPI(unittest.TestCase):
                                     message_direction=None,
                                     raw=None)
         response = text_now_api.mark_message_as_read(message=dummy_message)
+
+        self.assertIsNone(response)
+
+    @mock.patch("requests.delete")
+    def test_delete_message_happy_path(self, mock_requests_delete):
+        mock_response = MockResponse(dict(), 200)
+        mock_requests_delete.return_value = mock_response
+        text_now_api = TextNowAPI()
+        dummy_message = TextMessage(text=None,
+                                    number=None,
+                                    datetime_=None,
+                                    first_contact=None,
+                                    message_type=None,
+                                    read=None,
+                                    id_="12345",
+                                    message_direction=None,
+                                    raw=None)
+        response = text_now_api.delete_message(message=dummy_message)
 
         self.assertIsNone(response)
