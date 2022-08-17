@@ -91,9 +91,9 @@ You can also use a for loop to get all messages in a conversation.
 ```python3
 messages_generator = message_service.get_messages()
 
-last_10_messages = list()
+all_messages = list()
 for message_list in messages_generator:
-    last_10_messages += message_list
+    all_messages += message_list
 ```
 
 You can specify how many messages back you would like to be retrieved by using the `num_messages` keyword argument.
@@ -101,9 +101,9 @@ You can specify how many messages back you would like to be retrieved by using t
 ```python3
 messages_generator = message_service.get_messages(num_messages=10)
 
-all_messages = list()
+last_10_messages = list()
 for message_list in messages_generator:
-    all_messages += message_list
+    last_10_messages += message_list
 ```
 
 ### Send a Message
