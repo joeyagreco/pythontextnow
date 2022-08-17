@@ -160,7 +160,7 @@ class TextNowAPI:
 
     def upload_raw_media(self, *, attachment_url: str, raw_media: bytearray, content_type: tuple) -> None:
         """
-        Uploads the raw_media given to the given URL.
+        Uploads the given raw_media to the given URL.
         """
         headers = {
             'accept': '*/*',
