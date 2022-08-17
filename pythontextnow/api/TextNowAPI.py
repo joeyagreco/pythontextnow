@@ -121,11 +121,11 @@ class TextNowAPI:
 
         data = {"read": True}
 
-        response = requests.post(url,
-                                 params=params,
-                                 data=data,
-                                 cookies=self.__client_config.cookies,
-                                 headers=self.__client_config.headers)
+        response = requests.patch(url,
+                                  params=params,
+                                  data=data,
+                                  cookies=self.__client_config.cookies,
+                                  headers=self.__client_config.headers)
         response.raise_for_status()
 
     def delete_message(self, *, message: Optional[Message] = None, message_id: Optional[str] = None) -> None:
