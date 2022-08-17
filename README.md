@@ -142,9 +142,9 @@ Delete a message with
 its [Message](https://github.com/joeyagreco/pythontextnow/blob/main/pythontextnow/model/Message.py) object
 
 ```python3
-# assume you had a Message object saved to the variable "message"
+# assume you had a Message object saved to the variable "message_obj"
 
-message_service.delete_message(message=message)
+message_service.delete_message(message=message_obj)
 ```
 
 ### Mark a Message as Read
@@ -154,9 +154,9 @@ To mark a message as read, use the `mark_as_read()` method.
 Mark a single message as read.
 
 ```python3
-# assume you had a Message object saved to the variable "message"
+# assume you had a Message object saved to the variable "message_obj"
 
-message_service.mark_as_read(message=message)
+message_service.mark_as_read(message=message_obj)
 ```
 
 Mark a list of messages as read.
