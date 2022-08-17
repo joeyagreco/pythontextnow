@@ -16,6 +16,7 @@ class MessageService:
         self.__text_now_api = TextNowAPI()
         self.__API_CALL_COOLDOWN_SECONDS = 1
         self.__DEFAULT_PAGE_SIZE = 30
+        self.__BANNED_MEDIA_TYPES = ["audio"]
 
     def send_message(self, *, message: str):
         """
@@ -90,6 +91,8 @@ class MessageService:
         if media_type is None:
             raise ValueError("Cannot get media type from media at 'file_path'.")
         file_type = media_type.split("/")[0]
+        if file_type in self.__BANNED_MEDIA_TYPES:
+            raise ValueError(f"'{file_type} is not an allowed media type.'")
         is_video = file_type == "video"
         message_type = MessageType.IMAGE if file_type == "image" else MessageType.VIDEO
 
