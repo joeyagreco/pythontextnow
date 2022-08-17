@@ -24,6 +24,7 @@ class TextNowAPI:
         self.__CONVERSATIONS_ROUTE = ConfigReader.get("api", "conversations_route")
         self.__MESSAGES_ROUTE = ConfigReader.get("api", "messages_route")
         self.__MESSAGING_ROUTE = ConfigReader.get("api", "messaging_route")
+        self.__SEND_ATTACHMENT_ROUTE = ConfigReader.get("api", "send_attachment_route")
         self.__USERS_ROUTE = ConfigReader.get("api", "users_route")
 
         self.__MAX_MESSAGE_RESPONSE_SIZE = 30
@@ -176,3 +177,31 @@ class TextNowAPI:
                                 headers=headers,
                                 cookies=self.__client_config.cookies)
         response.raise_for_status()
+
+    def send_attachment(self, *,
+                        conversation_phone_number: str,
+                        message_type: MessageType,
+                        file_type: str,
+                        has_video: bool,
+                        attachment_url: str) -> None:
+
+        data = {
+            "contact_value": conversation_phone_number,
+            "contact_type": ContactType.MEDIA.value,
+            "read": 1,
+            "message_direction": MessageDirection.OUTGOING.value,
+            "message_type": message_type.value,
+            "from_name": self.__client_config.username,
+            "has_video": has_video,
+            "new": True,
+            "date": datetime.now().isoformat(),
+            "attachment_url": attachment_url,
+            "media_type": file_type
+        }
+
+        url = f"{self.__BASE_URL}{self.__API_ROUTE}/{self.__VERSION}{self.__SEND_ATTACHMENT_ROUTE}"
+
+        response = requests.post(url,
+                                 data=data,
+                                 headers=self.__client_config.headers,
+                                 cookies=self.__client_config.cookies)
