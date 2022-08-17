@@ -107,7 +107,7 @@ class MessageService:
         with open(file_path, mode="rb") as media:
             raw_media = media.read()
 
-        attachment_url = self.__text_now_api.get_attachment_url()
+        attachment_url = self.__text_now_api.get_attachment_url(message_type=message_type)
 
         self.__text_now_api.upload_raw_media(attachment_url=attachment_url,
                                              raw_media=raw_media,

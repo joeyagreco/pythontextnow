@@ -143,12 +143,12 @@ class TextNowAPI:
                                    headers=self.__client_config.headers)
         response.raise_for_status()
 
-    def get_attachment_url(self) -> str:
+    def get_attachment_url(self, *, message_type: MessageType) -> str:
         """
         Gets the URL that a file can be uploaded to.
         """
         url = f"{self.__BASE_URL}{self.__API_ROUTE}/{self.__VERSION}{self.__ATTACHMENT_URL_ROUTE}"
-        params = {"message_type": 2}
+        params = {"message_type": message_type.value}
         url_with_params = f"{url}?{parse.urlencode(params)}"
 
         response = requests.get(

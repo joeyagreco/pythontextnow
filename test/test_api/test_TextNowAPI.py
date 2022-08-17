@@ -167,3 +167,16 @@ class TestTextNowAPI(unittest.TestCase):
         response = text_now_api.delete_message(message=dummy_message)
 
         self.assertIsNone(response)
+
+    @mock.patch("requests.get")
+    def test_get_attachment_url_happy_path(self, mock_requests_get):
+        mock_response_dict = {
+            "result": "https://test"
+        }
+        mock_response = MockResponse(mock_response_dict, 200)
+        mock_requests_get.return_value = mock_response
+        text_now_api = TextNowAPI()
+        response = text_now_api.get_attachment_url(message_type=MessageType.IMAGE)
+
+        self.assertIsInstance(response, str)
+        self.assertEqual("https://test", response)
