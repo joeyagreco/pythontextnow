@@ -145,7 +145,7 @@ This is the same username that you would use to log in.
 
 To find this username:
 
-- Go to [TextNow's messaging page](https://www.textnow.com/messaging)
+- Go to [TextNow's messaging page](https://www.textnow.com/messaging) (make sure you are logged in)
 - Click "Settings"
 - Your username will be listed under "Account"
 
