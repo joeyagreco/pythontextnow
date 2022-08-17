@@ -96,6 +96,20 @@ To send a text message, use the `send_message()` method.
 message_service.send_message(message="Hello World!")
 ```
 
+### Send Media
+
+To send media, use the `send_media()` method.
+
+You can send:
+
+- Images
+- Videos
+- GIFs
+
+```python3
+message_service.send_message(file_path="C:\\my_media.png")
+```
+
 ### Delete a Message
 
 To delete a message, use the `delete_message()` method.
