@@ -52,7 +52,7 @@ For a guide on how to obtain these for your account, check [here](https://github
 Before you can call any methods, you must first set up your client config.
 
 ```python3
-from pythontextnow.api.Client import Client
+from pythontextnow import Client
 
 USERNAME = "{your_username}"
 SID_COOKIE = "{your_sid_cookie}"
@@ -66,7 +66,7 @@ The MessageService is how you will perform any action.
 It takes a phone number which defines which conversation you would like to perform your actions on.
 
 ```python3
-from pythontextnow.service.MessageService import MessageService
+from pythontextnow import MessageService
 
 PHONE_NUMBER = "{phone_number}"
 message_service = MessageService(conversation_phone_number=PHONE_NUMBER)
