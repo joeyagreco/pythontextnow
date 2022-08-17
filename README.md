@@ -68,7 +68,7 @@ It takes a phone number which defines which conversation you would like to perfo
 ```python3
 from pythontextnow import MessageService
 
-PHONE_NUMBER = "{phone_number}"
+PHONE_NUMBER = "{some_phone_number}"
 message_service = MessageService(conversation_phone_number=PHONE_NUMBER)
 ```
 
