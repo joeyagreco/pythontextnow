@@ -149,7 +149,7 @@ class TextNowAPI:
         """
         url = f"{self.__BASE_URL}{self.__API_ROUTE}/{self.__VERSION}{self.__ATTACHMENT_URL_ROUTE}"
         params = {"message_type": 2}
-        url_with_params = f"{url}&{parse.urlencode(params)}"
+        url_with_params = f"{url}?{parse.urlencode(params)}"
 
         response = requests.get(
             url_with_params,
@@ -159,13 +159,13 @@ class TextNowAPI:
 
         return response.json()["result"]
 
-    def upload_raw_media(self, *, attachment_url: str, raw_media: bytearray, content_type: tuple) -> None:
+    def upload_raw_media(self, *, attachment_url: str, raw_media: bytes, media_type: type) -> None:
         """
         Uploads the given raw_media to the given URL.
         """
         headers = {
             'accept': '*/*',
-            'content-type': content_type,
+            'content-type': media_type,
             'accept-language': 'en-US,en;q=0.9',
             "mode": "cors",
             "method": "PUT",
@@ -182,7 +182,7 @@ class TextNowAPI:
                         conversation_phone_number: str,
                         message_type: MessageType,
                         file_type: str,
-                        has_video: bool,
+                        is_video: bool,
                         attachment_url: str) -> None:
 
         data = {
@@ -192,7 +192,7 @@ class TextNowAPI:
             "message_direction": MessageDirection.OUTGOING.value,
             "message_type": message_type.value,
             "from_name": self.__client_config.username,
-            "has_video": has_video,
+            "has_video": is_video,
             "new": True,
             "date": datetime.now().isoformat(),
             "attachment_url": attachment_url,

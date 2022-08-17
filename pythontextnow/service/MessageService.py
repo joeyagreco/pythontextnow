@@ -1,7 +1,9 @@
+import mimetypes
 import time
 from typing import Optional, Generator
 
 from pythontextnow.api.TextNowAPI import TextNowAPI
+from pythontextnow.enum import MessageType
 from pythontextnow.model.Message import Message
 from pythontextnow.util import general
 
@@ -81,3 +83,27 @@ class MessageService:
         Deletes the given message or message with the given ID.
         """
         self.__text_now_api.delete_message(message=message, message_id=message_id)
+
+    def send_media_message(self, *, file_path: str):
+
+        media_type = mimetypes.guess_type(file_path)[0]  # will be something like "video/mp4" or "image/png"
+        if media_type is None:
+            raise ValueError("Cannot get media type from media at 'file_path'.")
+        file_type = media_type.split("/")[0]
+        is_video = file_type == "video"
+        message_type = MessageType.IMAGE if file_type == "image" else MessageType.VIDEO
+
+        with open(file_path, mode="rb") as media:
+            raw_media = media.read()
+
+        attachment_url = self.__text_now_api.get_attachment_url()
+
+        self.__text_now_api.upload_raw_media(attachment_url=attachment_url,
+                                             raw_media=raw_media,
+                                             media_type=media_type)
+
+        self.__text_now_api.send_attachment(conversation_phone_number=self.__conversation_phone_number,
+                                            message_type=message_type,
+                                            file_type=file_type,
+                                            is_video=is_video,
+                                            attachment_url=attachment_url)
