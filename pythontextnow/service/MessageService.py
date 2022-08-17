@@ -14,7 +14,6 @@ class MessageService:
         self.__conversation_phone_number = conversation_phone_number
 
         self.__text_now_api = TextNowAPI()
-        self.__API_CALL_COOLDOWN_SECONDS = 1
         self.__DEFAULT_PAGE_SIZE = 30
         self.__BANNED_MEDIA_TYPES = ["audio"]
 
@@ -41,22 +40,15 @@ class MessageService:
         """
         start_message_id: Optional[str] = None
 
-        last_call_time = None
         messages_yielded = 0
         num_messages = num_messages if num_messages is not None else self.__DEFAULT_PAGE_SIZE
         page_size = num_messages
 
         while num_messages is None or messages_yielded < num_messages and page_size > 0:
-            if last_call_time is not None:
-                time_since_last_call = last_call_time - time.time()
-                if time_since_last_call < self.__API_CALL_COOLDOWN_SECONDS:
-                    # cooldown
-                    time.sleep(self.__API_CALL_COOLDOWN_SECONDS)
             messages = self.__text_now_api.get_messages(self.__conversation_phone_number,
                                                         start_message_id=start_message_id,
                                                         get_archived=include_archived,
                                                         page_size=page_size)
-            last_call_time = time.time()
             if len(messages) > 0:
                 start_message_id = messages[-1].id_
                 messages_yielded += len(messages)

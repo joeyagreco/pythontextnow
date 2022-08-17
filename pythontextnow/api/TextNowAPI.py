@@ -8,6 +8,7 @@ from urllib.parse import quote
 import requests
 
 from pythontextnow.api.Client import Client, ClientConfig
+from pythontextnow.decorator.cooldown import enforce_cooldown
 from pythontextnow.enum import MessageType, MessageDirection, ContactType, ReadStatus
 from pythontextnow.model.Message import Message
 from pythontextnow.model.MultiMediaMessage import MultiMediaMessage
@@ -47,6 +48,7 @@ class TextNowAPI:
         csrf_token = response_text[token_start:token_end]
         return csrf_token
 
+    @enforce_cooldown
     def send_message(self, *, message: str, send_to: str) -> None:
         json_data = {"contact_value": send_to,
                      "contact_type": ContactType.DEFAULT.value,
@@ -68,6 +70,7 @@ class TextNowAPI:
             data=data)
         response.raise_for_status()
 
+    @enforce_cooldown
     def get_messages(self, conversation_phone_number: str,
                      *,
                      start_message_id: Optional[str] = None,
@@ -109,6 +112,7 @@ class TextNowAPI:
                 all_messages.append(MultiMediaMessage.from_dict(message_dict))
         return all_messages
 
+    @enforce_cooldown
     def mark_message_as_read(self, message: Message) -> None:
 
         clean_number = quote(message.number)
@@ -128,6 +132,7 @@ class TextNowAPI:
                                   headers=self.__client_config.headers)
         response.raise_for_status()
 
+    @enforce_cooldown
     def delete_message(self, *, message: Optional[Message] = None, message_id: Optional[str] = None) -> None:
         """
         Deletes the given message or message with the given ID.
@@ -143,6 +148,7 @@ class TextNowAPI:
                                    headers=self.__client_config.headers)
         response.raise_for_status()
 
+    @enforce_cooldown
     def get_attachment_url(self, *, message_type: MessageType) -> str:
         """
         Gets the URL that a file can be uploaded to.
@@ -159,6 +165,7 @@ class TextNowAPI:
 
         return response.json()["result"]
 
+    @enforce_cooldown
     def upload_raw_media(self, *, attachment_url: str, raw_media: bytes, media_type: str) -> None:
         """
         Uploads the given raw_media to the given URL.
@@ -178,6 +185,7 @@ class TextNowAPI:
                                 cookies=self.__client_config.cookies)
         response.raise_for_status()
 
+    @enforce_cooldown
     def send_attachment(self, *,
                         conversation_phone_number: str,
                         message_type: MessageType,
