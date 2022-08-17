@@ -85,7 +85,7 @@ class MessageService:
         """
         self.__text_now_api.delete_message(message=message, message_id=message_id)
 
-    def send_media_message(self, *, file_path: str):
+    def send_media(self, *, file_path: str):
         """
         Sends the given media to this instance's conversation_phone_number.
         Supports sending:
