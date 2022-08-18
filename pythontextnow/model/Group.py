@@ -24,3 +24,12 @@ class Group:
                      avatar=avatar,
                      members=members,
                      contact_value=group_dict["contact_value"])
+
+    @classmethod
+    def to_dict(cls, group: Group) -> dict:
+        return {
+            "title": group.title,
+            "avatar": Avatar.to_dict(group.avatar),
+            "members": [Member.to_dict(member) for member in group.members],
+            "contact_value": group.contact_value
+        }

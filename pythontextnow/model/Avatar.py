@@ -17,3 +17,11 @@ class Avatar:
             picture=avatar_dict["picture"],
             initials=avatar_dict["initials"]
         )
+
+    @classmethod
+    def to_dict(cls, avatar: Avatar) -> dict:
+        return {
+            "background_colour": avatar.background_color,
+            "picture": avatar.picture,
+            "initials": avatar.initials
+        }

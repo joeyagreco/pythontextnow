@@ -22,3 +22,14 @@ class Member:
                       display_value=member_dict["display_value"],
                       contact_name=member_dict["contact_name"],
                       avatar=avatar)
+
+    @classmethod
+    def to_dict(cls, member: Member) -> dict:
+        avatar_dict = Avatar.to_dict(member.avatar)
+        return {
+            "contact_type": member.contact_type.value,
+            "contact_value": member.contact_value,
+            "contact_name": member.contact_name,
+            "display_value": member.display_value,
+            "avatar": avatar_dict
+        }
