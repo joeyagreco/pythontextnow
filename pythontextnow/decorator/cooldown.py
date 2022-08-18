@@ -10,6 +10,8 @@ from pythontextnow.util.CustomLogger import CustomLogger
 def enforce_cooldown(function: Callable) -> Callable:
     """
     This will enforce a scaling cooldown on the method it wraps.
+    Currently, this is set up to work for API call methods only.
+    If in the future this function needs to be used for non-API methods, some refactoring can be done.
     """
 
     def wrapFunction(*args, **kwargs):
