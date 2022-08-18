@@ -3,5 +3,6 @@ from enum import unique, Enum
 
 @unique
 class ContactType(Enum):
+    # TODO: Find out what these values stand for
     DEFAULT = 1
-    MEDIA = 2
+    ALTERNATE = 2

@@ -200,7 +200,7 @@ class TextNowAPI:
 
         data = {
             "contact_value": conversation_phone_number,
-            "contact_type": ContactType.MEDIA.value,
+            "contact_type": ContactType.ALTERNATE.value,
             "read": 1,
             "message_direction": MessageDirection.OUTGOING.value,
             "message_type": message_type.value,
