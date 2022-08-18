@@ -61,15 +61,15 @@ CSRF_COOKIE = "{your_csrf_cookie}"
 Client.set_client_config(username=USERNAME, sid_cookie=SID_COOKIE, csrf_cookie=CSRF_COOKIE)
 ```
 
-The MessageService is how you will perform any action.
+The ConversationService is how you will perform any action.
 
 It takes a phone number which defines which conversation you would like to perform your actions on.
 
 ```python3
-from pythontextnow import MessageService
+from pythontextnow import ConversationService
 
 PHONE_NUMBER = "{some_phone_number}"
-message_service = MessageService(conversation_phone_number=PHONE_NUMBER)
+conversation_service = ConversationService(conversation_phone_number=PHONE_NUMBER)
 ```
 
 ### Get Messages
@@ -81,7 +81,7 @@ This will return the messages from most -> least recent.
 You can call `next()` with the returned generator each time you want to get the next group of messages.
 
 ```python3
-messages_generator = message_service.get_messages()
+messages_generator = conversation_service.get_messages()
 
 messages = next(messages_generator)
 ```
@@ -89,7 +89,7 @@ messages = next(messages_generator)
 You can also use a for loop to get all messages in a conversation.
 
 ```python3
-messages_generator = message_service.get_messages()
+messages_generator = conversation_service.get_messages()
 
 all_messages = list()
 for message_list in messages_generator:
@@ -99,7 +99,7 @@ for message_list in messages_generator:
 You can specify how many messages back you would like to be retrieved by using the `num_messages` keyword argument.
 
 ```python3
-messages_generator = message_service.get_messages(num_messages=10)
+messages_generator = conversation_service.get_messages(num_messages=10)
 
 last_10_messages = list()
 for message_list in messages_generator:
@@ -111,7 +111,7 @@ for message_list in messages_generator:
 To send a text message, use the `send_message()` method.
 
 ```python3
-message_service.send_message(message="Hello World!")
+conversation_service.send_message(message="Hello World!")
 ```
 
 ### Send Media
@@ -125,7 +125,7 @@ You can send:
 - GIFs
 
 ```python3
-message_service.send_message(file_path="C:\\my_media.png")
+conversation_service.send_message(file_path="C:\\my_media.png")
 ```
 
 ### Delete a Message
@@ -135,16 +135,21 @@ To delete a message, use the `delete_message()` method.
 Delete a message by its ID.
 
 ```python3
-message_service.delete_message(message_id="123456")
+conversation_service.delete_message(message_id="123456")
 ```
 
-Delete a message with
-its [Message](https://github.com/joeyagreco/pythontextnow/blob/main/pythontextnow/model/Message.py) object
+<!---
+// @formatter:off
+-->
+Delete a message with its [Message](https://github.com/joeyagreco/pythontextnow/blob/main/pythontextnow/model/Message.py) object
+<!---
+// @formatter:on
+-->
 
 ```python3
 # assume you had a Message object saved to the variable "message_obj"
 
-message_service.delete_message(message=message_obj)
+conversation_service.delete_message(message=message_obj)
 ```
 
 ### Mark a Message as Read
@@ -156,7 +161,7 @@ Mark a single message as read.
 ```python3
 # assume you had a Message object saved to the variable "message_obj"
 
-message_service.mark_as_read(message=message_obj)
+conversation_service.mark_as_read(message=message_obj)
 ```
 
 Mark a list of messages as read.
@@ -164,7 +169,7 @@ Mark a list of messages as read.
 ```python3
 # assume you had a list of Message objects saved to the variable "message_list"
 
-message_service.mark_as_read(messages=message_list)
+conversation_service.mark_as_read(messages=message_list)
 ```
 
 ## Setup

@@ -8,7 +8,7 @@ from pythontextnow.model.Message import Message
 from pythontextnow.util import general
 
 
-class MessageService:
+class ConversationService:
 
     def __init__(self, *, conversation_phone_number: str):
         self.__conversation_phone_number = conversation_phone_number
