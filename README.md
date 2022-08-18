@@ -141,7 +141,7 @@ conversation_service.delete_message(message_id="123456")
 <!---
 // @formatter:off
 -->
-Delete a message with its [Message](https://github.com/joeyagreco/pythontextnow/blob/main/pythontextnow/model/Message.py) object
+Delete a message with its [Message](https://github.com/joeyagreco/pythontextnow/blob/main/pythontextnow/model/Message.py) object.
 <!---
 // @formatter:on
 -->
