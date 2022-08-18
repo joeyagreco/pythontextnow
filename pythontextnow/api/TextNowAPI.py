@@ -10,6 +10,7 @@ import requests
 from pythontextnow.api.Client import Client, ClientConfig
 from pythontextnow.decorator.cooldown import enforce_cooldown
 from pythontextnow.enum import MessageType, MessageDirection, ContactType, ReadStatus
+from pythontextnow.model.Group import Group
 from pythontextnow.model.Message import Message
 from pythontextnow.model.MultiMediaMessage import MultiMediaMessage
 from pythontextnow.model.TextMessage import TextMessage
@@ -23,6 +24,7 @@ class TextNowAPI:
         self.__API_ROUTE = ConfigReader.get("api", "api_route")
         self.__ATTACHMENT_URL_ROUTE = ConfigReader.get("api", "attachment_url_route")
         self.__CONVERSATIONS_ROUTE = ConfigReader.get("api", "conversations_route")
+        self.__GROUPS_ROUTE = ConfigReader.get("api", "groups_route")
         self.__MESSAGES_ROUTE = ConfigReader.get("api", "messages_route")
         self.__MESSAGING_ROUTE = ConfigReader.get("api", "messaging_route")
         self.__SEND_ATTACHMENT_ROUTE = ConfigReader.get("api", "send_attachment_route")
@@ -214,3 +216,15 @@ class TextNowAPI:
                                  headers=self.__client_config.headers,
                                  cookies=self.__client_config.cookies)
         response.raise_for_status()
+
+    def get_groups(self) -> list[Group]:
+        url = f"{self.__BASE_URL}{self.__API_ROUTE}{self.__USERS_ROUTE}/{self.__client_config.username}{self.__GROUPS_ROUTE}"
+        response = requests.get(url,
+                                headers=self.__client_config.headers,
+                                cookies=self.__client_config.cookies)
+        response.raise_for_status()
+
+        group_list = list()
+        for group_dict in response.json():
+            group_list.append(Group.from_dict(group_dict))
+        return group_list
