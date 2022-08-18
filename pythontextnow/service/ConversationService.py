@@ -13,6 +13,9 @@ from pythontextnow.util import general
 class ConversationService:
 
     def __init__(self, *, conversation_phone_numbers: list[str]):
+        # check that given phone numbers are well-formed
+        for phone_number in conversation_phone_numbers:
+            self.__validate_well_formed_phone_number(phone_number)
         self.__conversation_phone_numbers = conversation_phone_numbers
         if len(self.__conversation_phone_numbers) == 0:
             raise ValueError("'conversation_phone_numbers' cannot be empty.")
@@ -36,6 +39,22 @@ class ConversationService:
                 conversation_number = self.__get_conversation_number()
                 self.__cached_conversation_number = conversation_number
         return self.__cached_conversation_number
+
+    @staticmethod
+    def __validate_well_formed_phone_number(phone_number: str) -> None:
+        """
+        Checks that the given phone number is well-formed.
+        If it is not well-formed, will raise an appropriate exception.
+        """
+        VALID_CHARACTERS = ["+", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+        VALID_PHONE_NUMBER_LENGTHS = [10, 11]
+        for char in phone_number:
+            if char not in VALID_CHARACTERS:
+                raise ValueError(f"'{char}' is not a valid character for a phone number.")
+        if phone_number.count("+") > 1 or phone_number.find("+") not in (0, -1):
+            raise ValueError(f"Phone number can only have 1 '+' at the start of the number.")
+        if len(phone_number.replace("+", "")) not in VALID_PHONE_NUMBER_LENGTHS:
+            raise ValueError(f"Phone number does not have a valid length.")
 
     @staticmethod
     def __numbers_match(number_1: str, number_2: str) -> bool:
