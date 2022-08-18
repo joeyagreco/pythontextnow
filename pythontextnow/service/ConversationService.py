@@ -80,7 +80,7 @@ class ConversationService:
             all_needed_group_numbers = [user.phone_number] + self.__conversation_phone_numbers
             # keep track of all numbers that have are a match
             matching_numbers = list()
-            if len(group.members) == len(self.__conversation_phone_numbers) + 1:
+            if len(group.members) == len(all_needed_group_numbers):
                 # correct amount of members, see if all the numbers match
                 for member in group.members:
                     # some numbers will have a "+" at the start
@@ -92,7 +92,7 @@ class ConversationService:
             if len(matching_numbers) == len(all_needed_group_numbers):
                 return group.contact_value
 
-        # we were unable to find a group that matched all conversation phone numbers
+        # unable to find a group that matched all conversation phone numbers
         # create a new group
         # create a Member for each number
         members = list()

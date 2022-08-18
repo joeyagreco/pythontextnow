@@ -268,30 +268,6 @@ class TextNowAPI:
         data["avatar"]["picture"] = group.avatar.picture
         data["avatar"]["initials"] = group.avatar.initials
 
-        # headers = self.__client_config.headers
-        # headers["authority"] = "www.textnow.com"
-        # headers["method"] = "POST"
-        # # headers["path"] = "/api/users/joeyagreco/groups"
-        # # scheme
-        # headers["accept"] = "application/json, text/javascript, */*; q=0.01"
-        # headers["accept-encoding"] = "gzip, deflate, br"
-        # headers["accept-language"] = "en-US,en;q=0.9"
-        # headers["cache-control"] = "no-cache"
-        # # content length
-        # headers["content-type"] = "application/x-www-form-urlencoded; charset=UTF-8"
-        # # cookie
-        # headers["dnt"] = "1"
-        # headers["origin"] = "https://www.textnow.com"
-        # headers["pragma"] = "no-cache"
-        # headers["scheme"] = "https"
-        # headers["referer"] = "https://www.textnow.com/messaging"
-        # # sec ch ...
-        # headers["sec-fetch-dest"] = "empty"
-        # headers["sec-fetch-mode"] = "cors"
-        # headers["sec-fetch-site"] = "same-origin"
-        # headers["x-csrf-token"] = "Dpi8f0ln-yLatpxTRm1546yVlNqbpbOmdK-o"
-        # headers["x-requested-with"] = "XMLHttpRequest"
-
         response = requests.post(url,
                                  data=data,
                                  headers=self.__client_config.headers,
