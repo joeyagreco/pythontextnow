@@ -14,6 +14,7 @@ from pythontextnow.model.Group import Group
 from pythontextnow.model.Message import Message
 from pythontextnow.model.MultiMediaMessage import MultiMediaMessage
 from pythontextnow.model.TextMessage import TextMessage
+from pythontextnow.model.User import User
 from pythontextnow.util.ConfigReader import ConfigReader
 
 
@@ -85,8 +86,10 @@ class TextNowAPI:
         If the given page_size is greater than the max allowed (30), will default to 30.
         """
         page_size = page_size if page_size <= self.__MAX_MESSAGE_RESPONSE_SIZE else self.__MAX_MESSAGE_RESPONSE_SIZE
+        contact_value = f"+{conversation_phone_number}" if not conversation_phone_number.startswith(
+            "+") else conversation_phone_number
         params = {
-            "contact_value": f"+{conversation_phone_number}",
+            "contact_value": contact_value,
             "direction": "past",
             "page_size": page_size,
             "get_archived": 1 if get_archived else 0
@@ -228,3 +231,12 @@ class TextNowAPI:
         for group_dict in response.json():
             group_list.append(Group.from_dict(group_dict))
         return group_list
+
+    def get_user(self) -> User:
+        url = f"{self.__BASE_URL}{self.__API_ROUTE}{self.__USERS_ROUTE}/{self.__client_config.username}"
+        response = requests.get(url,
+                                headers=self.__client_config.headers,
+                                cookies=self.__client_config.cookies)
+        response.raise_for_status()
+
+        return User.from_dict(response.json())
