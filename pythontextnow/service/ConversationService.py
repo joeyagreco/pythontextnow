@@ -2,8 +2,10 @@ import mimetypes
 from typing import Optional, Generator
 
 from pythontextnow.api.TextNowAPI import TextNowAPI
-from pythontextnow.enum import MessageType
-from pythontextnow.exception.InvalidConversationException import InvalidConversationException
+from pythontextnow.enum import MessageType, ContactType
+from pythontextnow.model.Avatar import Avatar
+from pythontextnow.model.Group import Group
+from pythontextnow.model.Member import Member
 from pythontextnow.model.Message import Message
 from pythontextnow.util import general
 
@@ -11,6 +13,9 @@ from pythontextnow.util import general
 class ConversationService:
 
     def __init__(self, *, conversation_phone_numbers: list[str]):
+        # check that given phone numbers are well-formed
+        for phone_number in conversation_phone_numbers:
+            self.__validate_well_formed_phone_number(phone_number)
         self.__conversation_phone_numbers = conversation_phone_numbers
         if len(self.__conversation_phone_numbers) == 0:
             raise ValueError("'conversation_phone_numbers' cannot be empty.")
@@ -36,6 +41,22 @@ class ConversationService:
         return self.__cached_conversation_number
 
     @staticmethod
+    def __validate_well_formed_phone_number(phone_number: str) -> None:
+        """
+        Checks that the given phone number is well-formed.
+        If it is not well-formed, will raise an appropriate exception.
+        """
+        VALID_CHARACTERS = ["+", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+        VALID_PHONE_NUMBER_LENGTHS = [10, 11]
+        for char in phone_number:
+            if char not in VALID_CHARACTERS:
+                raise ValueError(f"'{char}' is not a valid character for a phone number.")
+        if phone_number.count("+") > 1 or phone_number.find("+") not in (0, -1):
+            raise ValueError(f"Phone number can only have 1 '+' at the start of the number.")
+        if len(phone_number.replace("+", "")) not in VALID_PHONE_NUMBER_LENGTHS:
+            raise ValueError(f"Phone number does not have a valid length.")
+
+    @staticmethod
     def __numbers_match(number_1: str, number_2: str) -> bool:
         """
         This is a helper method to see if 2 numbers match.
@@ -57,7 +78,7 @@ class ConversationService:
             number_2 = number_2[-10:]
         return number_1[-10:] == number_2[-10:]
 
-    def __get_conversation_number(self) -> str:  # TODO: make this private
+    def __get_conversation_number(self) -> str:
         """
         For a chat with a single number, returns the only conversation_phone_number.
         For interfacing with group chats, a single phone number is used that is assigned by TextNow.
@@ -78,7 +99,7 @@ class ConversationService:
             all_needed_group_numbers = [user.phone_number] + self.__conversation_phone_numbers
             # keep track of all numbers that have are a match
             matching_numbers = list()
-            if len(group.members) == len(self.__conversation_phone_numbers) + 1:
+            if len(group.members) == len(all_needed_group_numbers):
                 # correct amount of members, see if all the numbers match
                 for member in group.members:
                     # some numbers will have a "+" at the start
@@ -90,10 +111,31 @@ class ConversationService:
             if len(matching_numbers) == len(all_needed_group_numbers):
                 return group.contact_value
 
-        # we were unable to find a group that matched all conversation phone numbers
-        # TODO: look for a way to create group chat.
-        # TODO: this way currently will fail if someone is trying to create a new group chat.
-        raise InvalidConversationException("Unable to find a group chat with all conversation_phone_numbers.")
+        # unable to find a group that matched all conversation phone numbers
+        # create a new group
+        # create a Member for each number
+        members = list()
+        for number in self.__conversation_phone_numbers:
+            # create a default avatar
+            avatar = Avatar(background_color="#DD7C00",
+                            picture=None,
+                            initials=None)
+            members.append(
+                Member(contact_name="",
+                       contact_value=number,
+                       contact_type=ContactType.ALTERNATE,
+                       display_value="",
+                       avatar=avatar)
+            )
+        group_avatar = Avatar(background_color="#DD7C00",
+                              picture=None,
+                              initials=None)
+        new_group_obj = Group(title=None,
+                              avatar=group_avatar,
+                              members=members,
+                              contact_value=None)
+        new_group = self.__text_now_api.create_group(group=new_group_obj)
+        return new_group.contact_value
 
     def send_message(self, *, message: str):
         """

@@ -240,3 +240,18 @@ class TextNowAPI:
         response.raise_for_status()
 
         return User.from_dict(response.json())
+
+    def create_group(self, *, group: Group) -> Group:
+        """
+        Creates a group with all given numbers and returns it.
+        """
+        url = f"{self.__BASE_URL}{self.__API_ROUTE}{self.__USERS_ROUTE}/{self.__client_config.username}{self.__GROUPS_ROUTE}"
+        group_dict = Group.to_dict(group)
+
+        response = requests.post(url,
+                                 data=group_dict,
+                                 headers=self.__client_config.headers,
+                                 cookies=self.__client_config.cookies)
+        response.raise_for_status()
+
+        return Group.from_dict(response.json())
