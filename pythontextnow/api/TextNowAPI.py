@@ -240,3 +240,62 @@ class TextNowAPI:
         response.raise_for_status()
 
         return User.from_dict(response.json())
+
+    def create_group(self, *, group: Group) -> Group:
+        """
+        Creates a group with all given numbers and returns it.
+        """
+        url = f"{self.__BASE_URL}{self.__API_ROUTE}{self.__USERS_ROUTE}/{self.__client_config.username}{self.__GROUPS_ROUTE}"
+        data = {
+            "title": group.title,
+            "members": list(),
+            "avatar": dict()
+        }
+        for member in group.members:
+            avatar = {
+                "background_colour": member.avatar.background_color,
+                "picture": member.avatar.picture,
+                "initials": member.avatar.initials
+            }
+            data["members"].append(
+                {"contact_type": member.contact_type.value,
+                 "contact_value": f"+{member.contact_value}",
+                 "contact_name": member.contact_name,
+                 "display_value": member.display_value,
+                 "avatar": avatar}
+            )
+        data["avatar"]["background_colour"] = group.avatar.background_color
+        data["avatar"]["picture"] = group.avatar.picture
+        data["avatar"]["initials"] = group.avatar.initials
+
+        # headers = self.__client_config.headers
+        # headers["authority"] = "www.textnow.com"
+        # headers["method"] = "POST"
+        # # headers["path"] = "/api/users/joeyagreco/groups"
+        # # scheme
+        # headers["accept"] = "application/json, text/javascript, */*; q=0.01"
+        # headers["accept-encoding"] = "gzip, deflate, br"
+        # headers["accept-language"] = "en-US,en;q=0.9"
+        # headers["cache-control"] = "no-cache"
+        # # content length
+        # headers["content-type"] = "application/x-www-form-urlencoded; charset=UTF-8"
+        # # cookie
+        # headers["dnt"] = "1"
+        # headers["origin"] = "https://www.textnow.com"
+        # headers["pragma"] = "no-cache"
+        # headers["scheme"] = "https"
+        # headers["referer"] = "https://www.textnow.com/messaging"
+        # # sec ch ...
+        # headers["sec-fetch-dest"] = "empty"
+        # headers["sec-fetch-mode"] = "cors"
+        # headers["sec-fetch-site"] = "same-origin"
+        # headers["x-csrf-token"] = "Dpi8f0ln-yLatpxTRm1546yVlNqbpbOmdK-o"
+        # headers["x-requested-with"] = "XMLHttpRequest"
+
+        response = requests.post(url,
+                                 data=data,
+                                 headers=self.__client_config.headers,
+                                 cookies=self.__client_config.cookies)
+        response.raise_for_status()
+
+        return Group.from_dict(response.json())
