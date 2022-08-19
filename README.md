@@ -64,7 +64,7 @@ Client.set_client_config(username=USERNAME, sid_cookie=SID_COOKIE, csrf_cookie=C
 
 The ConversationService is how you will perform any action.
 
-It takes a list of phone numbers which defines which conversation you would like to perform your actions on.
+It takes a list of phone numbers which define which conversation you would like to perform your actions on.
 
 ```python3
 from pythontextnow import ConversationService
