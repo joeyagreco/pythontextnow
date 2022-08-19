@@ -194,7 +194,11 @@ class ConversationService:
         """
         Deletes the given message or message with the given ID.
         """
-        self.__text_now_api.delete_message(message=message, message_id=message_id)
+        if message is None and message_id is None:
+            raise ValueError("'message' and 'message_id' cannot both be None.")
+
+        message_id = message_id if message_id is not None else message.id_
+        self.__text_now_api.delete_message(message_id=message_id)
 
     def send_media(self, *, file_path: str):
         """
@@ -229,3 +233,10 @@ class ConversationService:
                                             file_type=file_type,
                                             is_video=is_video,
                                             attachment_url=attachment_url)
+
+    def delete_conversation(self) -> None:
+        """
+        Deletes this conversation.
+        """
+        conversation_number = self.__conversation_number
+        self.__text_now_api.delete_conversation(conversation_phone_number=conversation_number)
