@@ -220,6 +220,7 @@ class TextNowAPI:
                                  cookies=self.__client_config.cookies)
         response.raise_for_status()
 
+    @enforce_cooldown
     def get_groups(self) -> list[Group]:
         url = f"{self.__BASE_URL}{self.__API_ROUTE}{self.__USERS_ROUTE}/{self.__client_config.username}{self.__GROUPS_ROUTE}"
         response = requests.get(url,
@@ -232,6 +233,7 @@ class TextNowAPI:
             group_list.append(Group.from_dict(group_dict))
         return group_list
 
+    @enforce_cooldown
     def get_user(self) -> User:
         url = f"{self.__BASE_URL}{self.__API_ROUTE}{self.__USERS_ROUTE}/{self.__client_config.username}"
         response = requests.get(url,
@@ -241,6 +243,7 @@ class TextNowAPI:
 
         return User.from_dict(response.json())
 
+    @enforce_cooldown
     def create_group(self, *, group: Group) -> Group:
         """
         Creates a group with all given numbers and returns it.
