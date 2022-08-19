@@ -20,9 +20,9 @@ A Python wrapper for TextNow.
     - [Get Messages](https://github.com/joeyagreco/pythontextnow#get-messages)
     - [Send a Message](https://github.com/joeyagreco/pythontextnow#send-a-message)
     - [Send Media](https://github.com/joeyagreco/pythontextnow#send-media)
-    - [Delete a Message](https://github.com/joeyagreco/pythontextnow#delete-a-message)
-    - [Delete a Conversation](https://github.com/joeyagreco/pythontextnow#delete-a-conversation)
     - [Mark a Message as Read](https://github.com/joeyagreco/pythontextnow#mark-a-message-as-read)
+- [Delete a Message](https://github.com/joeyagreco/pythontextnow#delete-a-message)
+    - [Delete a Conversation](https://github.com/joeyagreco/pythontextnow#delete-a-conversation)
 - [Setup](https://github.com/joeyagreco/pythontextnow#setup)
     - [Obtaining Your Username](https://github.com/joeyagreco/pythontextnow#obtaining-your-username)
     - [Obtaining Your Cookies](https://github.com/joeyagreco/pythontextnow#obtaining-your-cookies)
@@ -130,6 +130,26 @@ You can send:
 conversation_service.send_message(file_path="C:\\my_media.png")
 ```
 
+### Mark a Message as Read
+
+To mark a message as read, use the `mark_as_read()` method.
+
+Mark a single message as read.
+
+```python3
+# assume you had a Message object saved to the variable "message_obj"
+
+conversation_service.mark_as_read(message=message_obj)
+```
+
+Mark a list of messages as read.
+
+```python3
+# assume you had a list of Message objects saved to the variable "message_list"
+
+conversation_service.mark_as_read(messages=message_list)
+```
+
 ### Delete a Message
 
 To delete a message, use the `delete_message()` method.
@@ -160,26 +180,6 @@ To delete a conversation, use the `delete_conversation()` method.
 
 ```python3
 conversation_service.delete_conversation()
-```
-
-### Mark a Message as Read
-
-To mark a message as read, use the `mark_as_read()` method.
-
-Mark a single message as read.
-
-```python3
-# assume you had a Message object saved to the variable "message_obj"
-
-conversation_service.mark_as_read(message=message_obj)
-```
-
-Mark a list of messages as read.
-
-```python3
-# assume you had a list of Message objects saved to the variable "message_list"
-
-conversation_service.mark_as_read(messages=message_list)
 ```
 
 ## Setup
