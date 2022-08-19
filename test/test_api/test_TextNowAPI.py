@@ -155,16 +155,7 @@ class TestTextNowAPI(unittest.TestCase):
         mock_response = MockResponse(dict(), 200)
         mock_requests_delete.return_value = mock_response
         text_now_api = TextNowAPI()
-        dummy_message = TextMessage(text=None,
-                                    number=None,
-                                    datetime_=None,
-                                    first_contact=None,
-                                    message_type=None,
-                                    read=None,
-                                    id_="12345",
-                                    message_direction=None,
-                                    raw=None)
-        response = text_now_api.delete_message(message=dummy_message)
+        response = text_now_api.delete_message(message_id="12345")
 
         self.assertIsNone(response)
 
