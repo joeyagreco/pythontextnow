@@ -240,16 +240,35 @@ class TextNowAPI:
         return User.from_dict(response.json())
 
     @enforce_cooldown
-    def create_group(self, *, group: Group) -> Group:
+    def create_group(self, *, phone_numbers: list[str]) -> Group:
         """
-        Creates a group with all given numbers and returns it.
+        Creates a group with all given phone_numbers and returns it.
         """
         url = f"{self.__BASE_URL}{self.__API_ROUTE}{self.__USERS_ROUTE}/{self.__client_config.username}{self.__GROUPS_ROUTE}"
-        group_dict = Group.to_dict(group)
+
+        data = {
+            "json": {
+                "members": list()
+            }
+        }
+
+        for phone_number in phone_numbers:
+            member = {
+                "contact_value": phone_number,
+                "contact_type": ContactType.ALTERNATE.value
+            }
+            data["json"]["members"].append(member)
+
+        data = parse.urlencode(data, quote_via=urllib.parse.quote)
+        # we add this step because of a weird issue: https://qxf2.com/blog/python-mechanize-replace/
+        data = data.replace("%27", "%22")
+
+        headers = self.__client_config.headers
+        headers["Content-Type"] = "application/x-www-form-urlencoded; charset=UTF-8"
 
         response = requests.post(url,
-                                 data=group_dict,
-                                 headers=self.__client_config.headers,
+                                 data=data,
+                                 headers=headers,
                                  cookies=self.__client_config.cookies)
         response.raise_for_status()
 

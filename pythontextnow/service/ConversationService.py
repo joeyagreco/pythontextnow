@@ -2,10 +2,7 @@ import mimetypes
 from typing import Optional, Generator
 
 from pythontextnow.api.TextNowAPI import TextNowAPI
-from pythontextnow.enum import MessageType, ContactType
-from pythontextnow.model.Avatar import Avatar
-from pythontextnow.model.Group import Group
-from pythontextnow.model.Member import Member
+from pythontextnow.enum import MessageType
 from pythontextnow.model.Message import Message
 from pythontextnow.util import general
 
@@ -113,28 +110,7 @@ class ConversationService:
 
         # unable to find a group that matched all conversation phone numbers
         # create a new group
-        # create a Member for each number
-        members = list()
-        for number in self.__conversation_phone_numbers:
-            # create a default avatar
-            avatar = Avatar(background_color="#DD7C00",
-                            picture=None,
-                            initials=None)
-            members.append(
-                Member(contact_name="",
-                       contact_value=number,
-                       contact_type=ContactType.ALTERNATE,
-                       display_value="",
-                       avatar=avatar)
-            )
-        group_avatar = Avatar(background_color="#DD7C00",
-                              picture=None,
-                              initials=None)
-        new_group_obj = Group(title=None,
-                              avatar=group_avatar,
-                              members=members,
-                              contact_value=None)
-        new_group = self.__text_now_api.create_group(group=new_group_obj)
+        new_group = self.__text_now_api.create_group(phone_numbers=self.__conversation_phone_numbers)
         return new_group.contact_value
 
     def send_message(self, *, message: str):
