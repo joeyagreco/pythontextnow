@@ -21,6 +21,7 @@ A Python wrapper for TextNow.
     - [Send a Message](https://github.com/joeyagreco/pythontextnow#send-a-message)
     - [Send Media](https://github.com/joeyagreco/pythontextnow#send-media)
     - [Delete a Message](https://github.com/joeyagreco/pythontextnow#delete-a-message)
+    - [Delete a Conversation](https://github.com/joeyagreco/pythontextnow#delete-a-conversation)
     - [Mark a Message as Read](https://github.com/joeyagreco/pythontextnow#mark-a-message-as-read)
 - [Setup](https://github.com/joeyagreco/pythontextnow#setup)
     - [Obtaining Your Username](https://github.com/joeyagreco/pythontextnow#obtaining-your-username)
@@ -150,6 +151,14 @@ Delete a message with its [Message](https://github.com/joeyagreco/pythontextnow/
 # assume you had a Message object saved to the variable "message_obj"
 
 conversation_service.delete_message(message=message_obj)
+```
+
+### Delete a Conversation
+
+To delete a conversation, use the `delete_conversation()` method.
+
+```python3
+conversation_service.delete_conversation()
 ```
 
 ### Mark a Message as Read
