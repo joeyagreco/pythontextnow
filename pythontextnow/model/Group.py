@@ -12,7 +12,8 @@ class Group:
     title: Optional[str]
     avatar: Avatar
     members: list[Member]
-    contact_value: Optional[str]
+    contact_value: str
+    e164_contact_value: str
 
     @classmethod
     def from_dict(cls, group_dict: dict) -> Group:
@@ -23,7 +24,8 @@ class Group:
         return Group(title=group_dict["title"],
                      avatar=avatar,
                      members=members,
-                     contact_value=group_dict["contact_value"])
+                     contact_value=group_dict["contact_value"],
+                     e164_contact_value=group_dict["e164_contact_value"])
 
     @classmethod
     def to_dict(cls, group: Group) -> dict:

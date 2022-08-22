@@ -1,6 +1,8 @@
 import mimetypes
 from typing import Optional, Generator
 
+import phonenumbers
+
 from pythontextnow.api.TextNowAPI import TextNowAPI
 from pythontextnow.enum import MessageType
 from pythontextnow.model.Message import Message
@@ -12,15 +14,15 @@ class ConversationService:
     def __init__(self, *, conversation_phone_numbers: list[str]):
         # check that given phone numbers are well-formed
         for phone_number in conversation_phone_numbers:
-            self.__validate_well_formed_phone_number(phone_number)
+            self.__validate_phone_number(phone_number)
         self.__conversation_phone_numbers = conversation_phone_numbers
         if len(self.__conversation_phone_numbers) == 0:
             raise ValueError("'conversation_phone_numbers' cannot be empty.")
-        self.__cached_conversation_number: Optional[str] = None
+        self.__text_now_api = TextNowAPI()
+        self.__cached_conversation_number: str = self.__get_conversation_number()
 
         self.__DEFAULT_PAGE_SIZE = 30
         self.__BANNED_MEDIA_TYPES = ["audio"]
-        self.__text_now_api = TextNowAPI()
 
     @property
     def __conversation_number(self) -> str:
@@ -38,42 +40,10 @@ class ConversationService:
         return self.__cached_conversation_number
 
     @staticmethod
-    def __validate_well_formed_phone_number(phone_number: str) -> None:
-        """
-        Checks that the given phone number is well-formed.
-        If it is not well-formed, will raise an appropriate exception.
-        """
-        VALID_CHARACTERS = ["+", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
-        VALID_PHONE_NUMBER_LENGTHS = [10, 11]
-        for char in phone_number:
-            if char not in VALID_CHARACTERS:
-                raise ValueError(f"'{char}' is not a valid character for a phone number.")
-        if phone_number.count("+") > 1 or phone_number.find("+") not in (0, -1):
-            raise ValueError(f"Phone number can only have 1 '+' at the start of the number.")
-        if len(phone_number.replace("+", "")) not in VALID_PHONE_NUMBER_LENGTHS:
-            raise ValueError(f"Phone number does not have a valid length.")
-
-    @staticmethod
-    def __numbers_match(number_1: str, number_2: str) -> bool:
-        """
-        This is a helper method to see if 2 numbers match.
-        It accounts for country codes.
-        If one number has a country code and the other does not but the "core" number matches, it is counted as a match.
-
-        Examples:
-            - "+01112223333", "+01112223333" -> True
-            - "1112223333", "1112223333" -> True
-            - "+01112223333", "01112223333" -> True
-            - "+01112223333", "1112223333" -> True
-            - "1112223333", "4445556666" -> False
-        """
-        if number_1.startswith("+"):
-            # only keep core number (keep last 10 digits)
-            number_1 = number_1[-10:]
-        if number_2.startswith("+"):
-            # only keep core number (keep last 10 digits)
-            number_2 = number_2[-10:]
-        return number_1[-10:] == number_2[-10:]
+    def __validate_phone_number(phone_number: str) -> None:
+        parsed_number = phonenumbers.parse(phone_number)
+        if not phonenumbers.is_valid_number(parsed_number):
+            raise ValueError(f"'{phone_number}' is not a possible phone number.")
 
     def __get_conversation_number(self) -> str:
         """
@@ -99,10 +69,9 @@ class ConversationService:
             if len(group.members) == len(all_needed_group_numbers):
                 # correct amount of members, see if all the numbers match
                 for member in group.members:
-                    # some numbers will have a "+" at the start
-                    member_number = member.contact_value.replace("+", "")
                     for needed_number in all_needed_group_numbers:
-                        if self.__numbers_match(member_number, needed_number):
+                        member_number = member.e164_contact_value if member.e164_contact_value is not None else member.contact_value
+                        if needed_number in member_number or member_number in needed_number:
                             # in the group we are looking for
                             matching_numbers.append(member_number)
             if len(matching_numbers) == len(all_needed_group_numbers):

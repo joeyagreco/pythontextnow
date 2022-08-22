@@ -19,5 +19,6 @@ setuptools.setup(
     include_package_data=True,
     packages=setuptools.find_packages(exclude=("test", "docs")),
     install_requires=["requests",
-                      "setuptools"]
+                      "setuptools",
+                      "phonenumbers"]
 )
