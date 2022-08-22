@@ -2,13 +2,13 @@ from requests import HTTPError
 
 
 class MockResponse:
-    def __init__(self, data: dict | str, status_code: int, **kwargs):
+    def __init__(self, data: dict | list | str, status_code: int, **kwargs):
         self.__data = data
         self.text = kwargs.pop("text", None)
         self.content = kwargs.pop("content", None)
         self.status_code = status_code
 
-    def json(self) -> dict:
+    def json(self) -> dict | list:
         return self.__data
 
     def raise_for_status(self):

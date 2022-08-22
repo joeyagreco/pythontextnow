@@ -4,7 +4,7 @@ from unittest import mock, TestCase
 
 from pythontextnow.api.Client import Client
 from pythontextnow.api.TextNowAPI import TextNowAPI
-from pythontextnow.enum import MessageType, MessageDirection
+from pythontextnow.enum import MessageType, MessageDirection, ContactType
 from pythontextnow.model.MultiMediaMessage import MultiMediaMessage
 from pythontextnow.model.TextMessage import TextMessage
 from test.helper.helper_classes import MockResponse
@@ -196,3 +196,53 @@ class TestTextNowAPI(TestCase):
                                                             attachment_url="https://test")
 
         self.assertIsNone(response)
+
+    @mock.patch("requests.get")
+    def test_get_groups_happy_path(self, mock_requests_get):
+        dummy_group = {
+            "title": "group",
+            "avatar": {
+                "background_colour": "#000000",
+                "picture": "https://test",
+                "initials": "initials"
+            },
+            "members": [
+                {
+                    "contact_name": "name",
+                    "contact_type": ContactType.DEFAULT.value,
+                    "contact_value": "2222222222",
+                    "e164_contact_value": "+2222222222",
+                    "display_value": "display",
+                    "avatar": {
+                        "background_colour": "#111111",
+                        "picture": "https://test",
+                        "initials": "initials"
+                    }
+                }
+            ],
+            "contact_value": "1111111111",
+            "e164_contact_value": "+1111111111"
+        }
+        mock_response = MockResponse([dummy_group], 200)
+        mock_requests_get.return_value = mock_response
+        text_now_api = TextNowAPI()
+        response = text_now_api.get_groups.__wrapped__(text_now_api)
+
+        self.assertIsInstance(response, list)
+        self.assertEqual(1, len(response))
+        self.assertEqual("group", response[0].title)
+        self.assertEqual("#000000", response[0].avatar.background_color)
+        self.assertEqual("https://test", response[0].avatar.picture)
+        self.assertEqual("initials", response[0].avatar.initials)
+        self.assertIsInstance(response[0].members, list)
+        self.assertEqual(1, len(response[0].members))
+        self.assertEqual(ContactType.DEFAULT, response[0].members[0].contact_type)
+        self.assertEqual("2222222222", response[0].members[0].contact_value)
+        self.assertEqual("+2222222222", response[0].members[0].e164_contact_value)
+        self.assertEqual("display", response[0].members[0].display_value),
+        self.assertEqual("#111111", response[0].members[0].avatar.background_color)
+        self.assertEqual("https://test", response[0].members[0].avatar.picture)
+        self.assertEqual("initials", response[0].members[0].avatar.initials)
+        self.assertEqual("name", response[0].members[0].contact_name)
+        self.assertEqual("1111111111", response[0].contact_value)
+        self.assertEqual("+1111111111", response[0].e164_contact_value)
