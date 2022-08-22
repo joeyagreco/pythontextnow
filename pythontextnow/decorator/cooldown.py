@@ -1,5 +1,6 @@
 import datetime
 import time
+from functools import wraps
 from typing import Callable
 
 from pythontextnow import Client
@@ -14,6 +15,7 @@ def enforce_cooldown(function: Callable) -> Callable:
     If in the future this function needs to be used for non-API methods, some refactoring can be done.
     """
 
+    @wraps(function)
     def wrapFunction(*args, **kwargs):
         cooldown_seconds = ConfigReader.get("api", "api_call_cooldown_seconds", as_type=float)
         client_config = Client.get_client_config()

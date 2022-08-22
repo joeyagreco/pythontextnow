@@ -1,7 +1,6 @@
 import datetime
 import os
-import unittest
-from unittest import mock
+from unittest import mock, TestCase
 
 from pythontextnow.api.Client import Client
 from pythontextnow.api.TextNowAPI import TextNowAPI
@@ -11,7 +10,7 @@ from pythontextnow.model.TextMessage import TextMessage
 from test.helper.helper_classes import MockResponse
 
 
-class TestTextNowAPI(unittest.TestCase):
+class TestTextNowAPI(TestCase):
     PATH_TO_DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../data"))
 
     @classmethod
@@ -48,7 +47,7 @@ class TestTextNowAPI(unittest.TestCase):
         mock_response = MockResponse(dict(), 200)
         mock_requests_post.return_value = mock_response
         text_now_api = TextNowAPI()
-        response = text_now_api.send_message(message="hello world", send_to="5555555555")
+        response = text_now_api.send_message.__wrapped__(text_now_api, message="hello world", send_to="5555555555")
 
         self.assertIsNone(response)
 
@@ -76,7 +75,8 @@ class TestTextNowAPI(unittest.TestCase):
         mock_response = MockResponse(mock_response_dict, 200)
         mock_requests_get.return_value = mock_response
         text_now_api = TextNowAPI()
-        response = text_now_api.get_messages(conversation_phone_number="1111111111", page_size=10, get_archived=True)
+        response = text_now_api.get_messages.__wrapped__(text_now_api, conversation_phone_number="1111111111",
+                                                         page_size=10, get_archived=True)
 
         message = response[0]
         self.assertIsInstance(response, list)
@@ -116,7 +116,8 @@ class TestTextNowAPI(unittest.TestCase):
         mock_response = MockResponse(mock_response_dict, 200)
         mock_requests_get.return_value = mock_response
         text_now_api = TextNowAPI()
-        response = text_now_api.get_messages(conversation_phone_number="1111111111", page_size=10, get_archived=True)
+        response = text_now_api.get_messages.__wrapped__(text_now_api, conversation_phone_number="1111111111",
+                                                         page_size=10, get_archived=True)
 
         message = response[0]
         self.assertIsInstance(response, list)
@@ -146,7 +147,7 @@ class TestTextNowAPI(unittest.TestCase):
                                     id_="12345",
                                     message_direction=None,
                                     raw=None)
-        response = text_now_api.mark_message_as_read(message=dummy_message)
+        response = text_now_api.mark_message_as_read.__wrapped__(text_now_api, message=dummy_message)
 
         self.assertIsNone(response)
 
@@ -155,7 +156,7 @@ class TestTextNowAPI(unittest.TestCase):
         mock_response = MockResponse(dict(), 200)
         mock_requests_delete.return_value = mock_response
         text_now_api = TextNowAPI()
-        response = text_now_api.delete_message(message_id="12345")
+        response = text_now_api.delete_message.__wrapped__(text_now_api, message_id="12345")
 
         self.assertIsNone(response)
 
@@ -167,7 +168,7 @@ class TestTextNowAPI(unittest.TestCase):
         mock_response = MockResponse(mock_response_dict, 200)
         mock_requests_get.return_value = mock_response
         text_now_api = TextNowAPI()
-        response = text_now_api.get_attachment_url(message_type=MessageType.IMAGE)
+        response = text_now_api.get_attachment_url.__wrapped__(text_now_api, message_type=MessageType.IMAGE)
 
         self.assertIsInstance(response, str)
         self.assertEqual("https://test", response)
@@ -177,9 +178,9 @@ class TestTextNowAPI(unittest.TestCase):
         mock_response = MockResponse(dict(), 200)
         mock_requests_put.return_value = mock_response
         text_now_api = TextNowAPI()
-        response = text_now_api.upload_raw_media(attachment_url="https://test",
-                                                 raw_media=bytes("some_image_bytes", "utf-8"),
-                                                 media_type="image/png")
+        response = text_now_api.upload_raw_media.__wrapped__(text_now_api, attachment_url="https://test",
+                                                             raw_media=bytes("some_image_bytes", "utf-8"),
+                                                             media_type="image/png")
 
         self.assertIsNone(response)
 
@@ -188,10 +189,10 @@ class TestTextNowAPI(unittest.TestCase):
         mock_response = MockResponse(dict(), 200)
         mock_requests_post.return_value = mock_response
         text_now_api = TextNowAPI()
-        response = text_now_api.send_attachment(conversation_phone_number="1111111111",
-                                                message_type=MessageType.IMAGE,
-                                                file_type="image",
-                                                is_video=False,
-                                                attachment_url="https://test")
+        response = text_now_api.send_attachment.__wrapped__(text_now_api, conversation_phone_number="1111111111",
+                                                            message_type=MessageType.IMAGE,
+                                                            file_type="image",
+                                                            is_video=False,
+                                                            attachment_url="https://test")
 
         self.assertIsNone(response)
