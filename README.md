@@ -66,6 +66,9 @@ The ConversationService is how you will perform any action.
 
 It takes a list of phone numbers which define the conversation you would like to perform your actions on.
 
+NOTE: All phone numbers must be given
+in [E.164 format](https://help.aircall.io/en/articles/4350988-what-is-e-164-format).
+
 ```python3
 from pythontextnow import ConversationService
 
