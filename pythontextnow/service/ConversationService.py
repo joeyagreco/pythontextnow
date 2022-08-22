@@ -12,12 +12,9 @@ from pythontextnow.util import general
 class ConversationService:
 
     def __init__(self, *, conversation_phone_numbers: list[str]):
-        # check that given phone numbers are well-formed
-        for phone_number in conversation_phone_numbers:
-            self.__validate_phone_number(phone_number)
         self.__conversation_phone_numbers = conversation_phone_numbers
-        if len(self.__conversation_phone_numbers) == 0:
-            raise ValueError("'conversation_phone_numbers' cannot be empty.")
+        # check that given phone numbers are well-formed
+        self.__validate_conversation_phone_numbers()
         self.__text_now_api = TextNowAPI()
         self.__cached_conversation_number: str = self.__get_conversation_number()
 
@@ -39,11 +36,13 @@ class ConversationService:
                 self.__cached_conversation_number = conversation_number
         return self.__cached_conversation_number
 
-    @staticmethod
-    def __validate_phone_number(phone_number: str) -> None:
-        parsed_number = phonenumbers.parse(phone_number)
-        if not phonenumbers.is_valid_number(parsed_number):
-            raise ValueError(f"'{phone_number}' is not a possible phone number.")
+    def __validate_conversation_phone_numbers(self) -> None:
+        if len(self.__conversation_phone_numbers) == 0:
+            raise ValueError("'conversation_phone_numbers' cannot be empty.")
+        for phone_number in self.__conversation_phone_numbers:
+            parsed_number = phonenumbers.parse(phone_number)
+            if not phonenumbers.is_valid_number(parsed_number):
+                raise ValueError(f"'{phone_number}' is not a possible phone number.")
 
     def __get_conversation_number(self) -> str:
         """
@@ -75,12 +74,12 @@ class ConversationService:
                             # in the group we are looking for
                             matching_numbers.append(member_number)
             if len(matching_numbers) == len(all_needed_group_numbers):
-                return group.contact_value
+                return group.e164_contact_value if group.e164_contact_value is not None else group.contact_value
 
         # unable to find a group that matched all conversation phone numbers
         # create a new group
         new_group = self.__text_now_api.create_group(phone_numbers=self.__conversation_phone_numbers)
-        return new_group.contact_value
+        return new_group.e164_contact_value if new_group.e164_contact_value is not None else new_group.contact_value
 
     def send_message(self, *, message: str):
         """
