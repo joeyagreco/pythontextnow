@@ -7,6 +7,7 @@ from pythontextnow.api.TextNowAPI import TextNowAPI
 from pythontextnow.enum import MessageType, MessageDirection, ContactType
 from pythontextnow.model.MultiMediaMessage import MultiMediaMessage
 from pythontextnow.model.TextMessage import TextMessage
+from pythontextnow.model.User import User
 from test.helper.helper_classes import MockResponse
 
 
@@ -246,3 +247,22 @@ class TestTextNowAPI(TestCase):
         self.assertEqual("name", response[0].members[0].contact_name)
         self.assertEqual("1111111111", response[0].contact_value)
         self.assertEqual("+1111111111", response[0].e164_contact_value)
+
+    @mock.patch("requests.get")
+    def test_get_user_happy_path(self, mock_requests_get):
+        dummy_user = {
+            "user_id": 123,
+            "username": "user",
+            "email": "123@email.com",
+            "phone_number": "1111111111"
+        }
+        mock_response = MockResponse(dummy_user, 200)
+        mock_requests_get.return_value = mock_response
+        text_now_api = TextNowAPI()
+        response = text_now_api.get_user.__wrapped__(text_now_api)
+
+        self.assertIsInstance(response, User)
+        self.assertEqual(123, response.user_id)
+        self.assertEqual("user", response.username)
+        self.assertEqual("123@email.com", response.email)
+        self.assertEqual("1111111111", response.phone_number)
