@@ -316,3 +316,12 @@ class TestTextNowAPI(TestCase):
         self.assertEqual("name", response.members[0].contact_name)
         self.assertEqual("1111111111", response.contact_value)
         self.assertEqual("+1111111111", response.e164_contact_value)
+
+    @mock.patch("requests.delete")
+    def test_delete_conversation_happy_path(self, mock_requests_delete):
+        mock_response = MockResponse(dict(), 200)
+        mock_requests_delete.return_value = mock_response
+        text_now_api = TextNowAPI()
+        response = text_now_api.delete_conversation.__wrapped__(text_now_api, conversation_phone_number="+1111111111")
+
+        self.assertIsNone(response)
