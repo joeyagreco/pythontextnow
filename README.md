@@ -22,7 +22,7 @@ A Python wrapper for TextNow.
     - [Send a Message](https://github.com/joeyagreco/pythontextnow#send-a-message)
     - [Send Media](https://github.com/joeyagreco/pythontextnow#send-media)
     - [Mark a Message as Read](https://github.com/joeyagreco/pythontextnow#mark-a-message-as-read)
-- [Delete a Message](https://github.com/joeyagreco/pythontextnow#delete-a-message)
+    - [Delete a Message](https://github.com/joeyagreco/pythontextnow#delete-a-message)
     - [Delete a Conversation](https://github.com/joeyagreco/pythontextnow#delete-a-conversation)
 - [Setup](https://github.com/joeyagreco/pythontextnow#setup)
     - [Obtaining Your Username](https://github.com/joeyagreco/pythontextnow#obtaining-your-username)
