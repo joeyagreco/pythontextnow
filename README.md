@@ -44,7 +44,6 @@ pip install pythontextnow
 Make sure you have the following before you begin:
 
 - TextNow username
-- CSRF cookie
 - SID cookie
 
 For a guide on how to obtain these for your account, check [here](https://github.com/joeyagreco/pythontextnow#setup).
@@ -58,9 +57,8 @@ from pythontextnow import Client
 
 USERNAME = "{your_username}"
 SID_COOKIE = "{your_sid_cookie}"
-CSRF_COOKIE = "{your_csrf_cookie}"
 
-Client.set_client_config(username=USERNAME, sid_cookie=SID_COOKIE, csrf_cookie=CSRF_COOKIE)
+Client.set_client_config(username=USERNAME, sid_cookie=SID_COOKIE)
 ```
 
 The ConversationService is how you will perform any action.
@@ -205,26 +203,32 @@ To find this username:
 - Click "Settings"
 - Your username will be listed under "Account"
 
-### Obtaining Your Cookies
+### Obtaining Your Cookie
 
-You will need a CSRF cookie and an SID cookie to utilize this library.
+You will need an SID cookie to utilize this library.
 
-To find these cookies:
+To find this cookie:
 
-- Go to [TextNow's messaging page](https://www.textnow.com/messaging)
+- Go to [TextNow's messaging page](https://www.textnow.com/messaging) (make sure you are logged in to your account)
 
 > In **Chrome**:
 > - Access [Developer Tools](https://developer.chrome.com/docs/devtools/open/) in your browser
 > - Click on the "Application" tab
-> - Go to "Storage" -> "Cookies"
+> - Click on the "Network" tab
+> - Find a request under "Fetch/XHR"
+> - Go to the "Headers" tab in the given request
+> - Find the "Request Headers" section
+> - Locate the "Cookie" field
 
 > In **Firefox**
 > - Access [Developer Tools](https://firefox-source-docs.mozilla.org/devtools-user/) in your browser
-> - Click on the "Storage" tab
-> - Go to "Storage" -> "Cookies"
+> - Click on the "Network" tab
+> - Find a request under "XHR"
+> - Go to the "Headers" tab in the given request
+> - Find the "Request Headers" section
+> - Locate the "Cookie" field
 
-- Search for the "connect.sid" name, the value will be your SID cookie
-- Search for the "_csrf" name, the value will be your CSRF cookie
+- Locate the "connect.sid" field, the value will be your SID cookie
 
 ## Running Tests
 

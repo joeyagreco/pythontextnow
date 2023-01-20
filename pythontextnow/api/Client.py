@@ -4,6 +4,8 @@ import datetime
 from dataclasses import dataclass
 from typing import Optional
 
+from pythontextnow.util.general import get_random_user_agent
+
 
 @dataclass(kw_only=True)
 class ClientConfig:
@@ -23,21 +25,15 @@ class Client:
     client_config: Optional[ClientConfig] = None
 
     @classmethod
-    def set_client_config(cls, *, username: str, sid_cookie: str, csrf_cookie: str) -> None:
-        from pythontextnow.api.TextNowAPI import TextNowAPI
-        text_now_api = TextNowAPI()
-        cookies = {
-            "connect.sid": sid_cookie,
-            "_csrf": csrf_cookie,
-        }
+    def set_client_config(cls, *, username: str, sid_cookie: str) -> None:
         headers = {
-            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.104 Safari/537.36 ",
-            "x-csrf-token": text_now_api.get_csrf_token(cookies)
+            "user-agent": get_random_user_agent(),
+            "Cookie": f"connect.sid={sid_cookie};",
         }
 
         client_config = ClientConfig(username=username,
                                      headers=headers,
-                                     cookies=cookies,
+                                     cookies=dict(),  # for now, no cookies are needed
                                      last_call_time=datetime.datetime.now())
         cls.client_config = client_config
 
