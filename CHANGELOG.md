@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 - Added disclaimer
 - Updated README
+- Fixed auth flow
 
 ## [1.0.0]
 

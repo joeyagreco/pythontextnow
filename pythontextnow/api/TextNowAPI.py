@@ -37,20 +37,6 @@ class TextNowAPI:
     def __client_config(self) -> ClientConfig:
         return Client.get_client_config()
 
-    def get_csrf_token(self, cookies: dict) -> str:
-        response = requests.get(f"{self.__BASE_URL}{self.__MESSAGING_ROUTE}",
-                                cookies=cookies)
-
-        response.raise_for_status()
-
-        response_text = response.text
-        needle = 'csrf-token" content="'
-        needle_index = response_text.find(needle)
-        token_start = needle_index + len(needle)
-        token_end = response_text.find('"', token_start)
-        csrf_token = response_text[token_start:token_end]
-        return csrf_token
-
     @enforce_cooldown
     def send_message(self, *, message: str, send_to: str) -> None:
         json_data = {"contact_value": send_to,
