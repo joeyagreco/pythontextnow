@@ -23,8 +23,8 @@ def enforce_cooldown(function: Callable) -> Callable:
         difference_seconds = (now - client_config.last_call_time).total_seconds()
         if difference_seconds < cooldown_seconds:
             # enforce cooldown
-            CustomLogger.getLogger().warning(f"ENFORCING COOLDOWN FOR {difference_seconds} SECONDS...")
-            time.sleep(difference_seconds)
+            CustomLogger.getLogger().warning(f"ENFORCING COOLDOWN FOR {cooldown_seconds} SECONDS...")
+            time.sleep(cooldown_seconds)
         Client.update(last_call_time=now)
         return function(*args, **kwargs)
 
