@@ -4,7 +4,8 @@
 <br>
 <img src="https://raw.githubusercontent.com/joeyagreco/pythontextnow/main/img/pythontextnow_logo_.png" alt="pythontextnow logo" width="450"/>
 
-A Python wrapper for TextNow.
+Send SMS messages from Python!\
+A Python wrapper for TextNow. 
 
 [TextNow Website](https://www.textnow.com/)
 
