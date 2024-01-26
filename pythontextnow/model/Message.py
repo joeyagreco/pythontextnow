@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime
 
-from pythontextnow.enum import MessageType, MessageDirection
+from pythontextnow.enum import MessageDirection, MessageType
 
 
 @dataclass(kw_only=True)
@@ -27,11 +27,13 @@ class Message:
         id_ = message_dict["id"]
         direction = MessageDirection.from_value(message_dict["message_direction"])
         raw = message_dict
-        return Message(number=number,
-                       datetime_=date,
-                       first_contact=first_contact,
-                       message_type=type_,
-                       read=read,
-                       id_=id_,
-                       message_direction=direction,
-                       raw=raw)
+        return Message(
+            number=number,
+            datetime_=date,
+            first_contact=first_contact,
+            message_type=type_,
+            read=read,
+            id_=id_,
+            message_direction=direction,
+            raw=raw,
+        )

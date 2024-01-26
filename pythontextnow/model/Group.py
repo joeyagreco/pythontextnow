@@ -21,11 +21,13 @@ class Group:
         for member_dict in group_dict["members"]:
             members.append(Member.from_dict(member_dict))
         avatar = Avatar.from_dict(group_dict["avatar"])
-        return Group(title=group_dict["title"],
-                     avatar=avatar,
-                     members=members,
-                     contact_value=group_dict["contact_value"],
-                     e164_contact_value=group_dict["e164_contact_value"])
+        return Group(
+            title=group_dict["title"],
+            avatar=avatar,
+            members=members,
+            contact_value=group_dict["contact_value"],
+            e164_contact_value=group_dict["e164_contact_value"],
+        )
 
     @classmethod
     def to_dict(cls, group: Group) -> dict:
@@ -33,5 +35,5 @@ class Group:
             "title": group.title,
             "avatar": Avatar.to_dict(group.avatar),
             "members": [Member.to_dict(member) for member in group.members],
-            "contact_value": group.contact_value
+            "contact_value": group.contact_value,
         }

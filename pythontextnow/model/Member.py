@@ -18,12 +18,14 @@ class Member:
     @classmethod
     def from_dict(cls, member_dict: dict) -> Member:
         avatar = Avatar.from_dict(member_dict["avatar"])
-        return Member(contact_value=member_dict["contact_value"],
-                      e164_contact_value=member_dict["e164_contact_value"],
-                      contact_type=ContactType.from_value(member_dict["contact_type"]),
-                      display_value=member_dict["display_value"],
-                      contact_name=member_dict["contact_name"],
-                      avatar=avatar)
+        return Member(
+            contact_value=member_dict["contact_value"],
+            e164_contact_value=member_dict["e164_contact_value"],
+            contact_type=ContactType.from_value(member_dict["contact_type"]),
+            display_value=member_dict["display_value"],
+            contact_name=member_dict["contact_name"],
+            avatar=avatar,
+        )
 
     @classmethod
     def to_dict(cls, member: Member) -> dict:
@@ -33,5 +35,5 @@ class Member:
             "contact_value": member.contact_value,
             "contact_name": member.contact_name,
             "display_value": member.display_value,
-            "avatar": avatar_dict
+            "avatar": avatar_dict,
         }

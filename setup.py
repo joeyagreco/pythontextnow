@@ -18,7 +18,5 @@ setuptools.setup(
     license="MIT",
     include_package_data=True,
     packages=setuptools.find_packages(exclude=("test", "docs")),
-    install_requires=["requests",
-                      "setuptools",
-                      "phonenumbers"]
+    install_requires=["requests", "setuptools", "phonenumbers"],
 )

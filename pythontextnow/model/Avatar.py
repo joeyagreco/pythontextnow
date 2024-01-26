@@ -15,7 +15,7 @@ class Avatar:
         return Avatar(
             background_color=avatar_dict["background_colour"],
             picture=avatar_dict["picture"],
-            initials=avatar_dict["initials"]
+            initials=avatar_dict["initials"],
         )
 
     @classmethod
@@ -23,5 +23,5 @@ class Avatar:
         return {
             "background_colour": avatar.background_color,
             "picture": avatar.picture,
-            "initials": avatar.initials
+            "initials": avatar.initials,
         }

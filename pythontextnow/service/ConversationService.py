@@ -1,5 +1,5 @@
 import mimetypes
-from typing import Optional, Generator
+from typing import Generator, Optional
 
 import phonenumbers
 
@@ -10,7 +10,6 @@ from pythontextnow.util import general
 
 
 class ConversationService:
-
     def __init__(self, *, conversation_phone_numbers: list[str]):
         self.__conversation_phone_numbers = conversation_phone_numbers
         # check that given phone numbers are well-formed
@@ -69,17 +68,31 @@ class ConversationService:
                 # correct amount of members, see if all the numbers match
                 for member in group.members:
                     for needed_number in all_needed_group_numbers:
-                        member_number = member.e164_contact_value if member.e164_contact_value is not None else member.contact_value
+                        member_number = (
+                            member.e164_contact_value
+                            if member.e164_contact_value is not None
+                            else member.contact_value
+                        )
                         if needed_number in member_number or member_number in needed_number:
                             # in the group we are looking for
                             matching_numbers.append(member_number)
             if len(matching_numbers) == len(all_needed_group_numbers):
-                return group.e164_contact_value if group.e164_contact_value is not None else group.contact_value
+                return (
+                    group.e164_contact_value
+                    if group.e164_contact_value is not None
+                    else group.contact_value
+                )
 
         # unable to find a group that matched all conversation phone numbers
         # create a new group
-        new_group = self.__text_now_api.create_group(phone_numbers=self.__conversation_phone_numbers)
-        return new_group.e164_contact_value if new_group.e164_contact_value is not None else new_group.contact_value
+        new_group = self.__text_now_api.create_group(
+            phone_numbers=self.__conversation_phone_numbers
+        )
+        return (
+            new_group.e164_contact_value
+            if new_group.e164_contact_value is not None
+            else new_group.contact_value
+        )
 
     def send_message(self, *, message: str):
         """
@@ -88,10 +101,9 @@ class ConversationService:
         message = general.replace_newlines(message)
         self.__text_now_api.send_message(message=message, send_to=self.__conversation_number)
 
-    def get_messages(self,
-                     *,
-                     num_messages: Optional[int] = None,
-                     include_archived: bool = True) -> Generator[list[Message], None, None]:
+    def get_messages(
+        self, *, num_messages: Optional[int] = None, include_archived: bool = True
+    ) -> Generator[list[Message], None, None]:
         """
         This yields the last n messages in the conversation with this instance's conversation_phone_number.
         Where: n = 30 or response_size if given.
@@ -108,10 +120,12 @@ class ConversationService:
         page_size = num_messages if num_messages is not None else self.__DEFAULT_PAGE_SIZE
 
         while num_messages is None or messages_yielded < num_messages and page_size > 0:
-            messages = self.__text_now_api.get_messages(self.__conversation_number,
-                                                        start_message_id=start_message_id,
-                                                        get_archived=include_archived,
-                                                        page_size=page_size)
+            messages = self.__text_now_api.get_messages(
+                self.__conversation_number,
+                start_message_id=start_message_id,
+                get_archived=include_archived,
+                page_size=page_size,
+            )
             if len(messages) > 0:
                 start_message_id = messages[-1].id_
                 messages_yielded += len(messages)
@@ -134,7 +148,9 @@ class ConversationService:
         for message in all_messages:
             self.__text_now_api.mark_message_as_read(message)
 
-    def delete_message(self, *, message: Optional[Message] = None, message_id: Optional[str] = None) -> None:
+    def delete_message(
+        self, *, message: Optional[Message] = None, message_id: Optional[str] = None
+    ) -> None:
         """
         Deletes the given message or message with the given ID.
         """
@@ -157,7 +173,9 @@ class ConversationService:
         if mime_type is None:
             raise ValueError("Cannot get media type from media at 'file_path'.")
         media_type = mime_type[0]  # will be something like "video/mp4" or "image/png"
-        file_type = media_type[0].split("/")[0]  # will be something like "video" or "image" or "gif"
+        file_type = media_type[0].split("/")[
+            0
+        ]  # will be something like "video" or "image" or "gif"
         if file_type in self.__BANNED_MEDIA_TYPES:
             raise ValueError(f"'{file_type} is not an allowed media type.'")
         is_video = file_type == "video"
@@ -168,15 +186,17 @@ class ConversationService:
 
         attachment_url = self.__text_now_api.get_attachment_url(message_type=message_type)
 
-        self.__text_now_api.upload_raw_media(attachment_url=attachment_url,
-                                             raw_media=raw_media,
-                                             media_type=media_type)
+        self.__text_now_api.upload_raw_media(
+            attachment_url=attachment_url, raw_media=raw_media, media_type=media_type
+        )
 
-        self.__text_now_api.send_attachment(conversation_phone_number=self.__conversation_number,
-                                            message_type=message_type,
-                                            file_type=file_type,
-                                            is_video=is_video,
-                                            attachment_url=attachment_url)
+        self.__text_now_api.send_attachment(
+            conversation_phone_number=self.__conversation_number,
+            message_type=message_type,
+            file_type=file_type,
+            is_video=is_video,
+            attachment_url=attachment_url,
+        )
 
     def delete_conversation(self) -> None:
         """

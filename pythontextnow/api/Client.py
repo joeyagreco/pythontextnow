@@ -12,6 +12,7 @@ class ClientConfig:
     """
     Used to hold the Client config.
     """
+
     username: str
     headers: dict
     cookies: dict
@@ -22,19 +23,19 @@ class Client:
     """
     This class is used to store and set up initial Client configuration.
     """
+
     client_config: Optional[ClientConfig] = None
 
     @classmethod
     def set_client_config(cls, *, username: str, sid_cookie: str) -> None:
-        headers = {
-            "user-agent": get_random_user_agent(),
-            "Cookie": f"connect.sid={sid_cookie};",
-        }
+        headers = {"user-agent": get_random_user_agent(), "Cookie": f"connect.sid={sid_cookie};"}
 
-        client_config = ClientConfig(username=username,
-                                     headers=headers,
-                                     cookies=dict(),  # for now, no cookies are needed
-                                     last_call_time=datetime.datetime.now())
+        client_config = ClientConfig(
+            username=username,
+            headers=headers,
+            cookies=dict(),  # for now, no cookies are needed
+            last_call_time=datetime.datetime.now(),
+        )
         cls.client_config = client_config
 
     @classmethod

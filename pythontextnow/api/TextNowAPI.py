@@ -9,7 +9,7 @@ import requests
 
 from pythontextnow.api.Client import Client, ClientConfig
 from pythontextnow.decorator.cooldown import enforce_cooldown
-from pythontextnow.enum import MessageType, MessageDirection, ContactType, ReadStatus
+from pythontextnow.enum import ContactType, MessageDirection, MessageType, ReadStatus
 from pythontextnow.model.Group import Group
 from pythontextnow.model.Message import Message
 from pythontextnow.model.MultiMediaMessage import MultiMediaMessage
@@ -39,16 +39,18 @@ class TextNowAPI:
 
     @enforce_cooldown
     def send_message(self, *, message: str, send_to: str) -> None:
-        json_data = {"contact_value": send_to,
-                     "contact_type": ContactType.DEFAULT.value,
-                     "message": message,
-                     "read": ReadStatus.READ.value,
-                     "message_direction": MessageDirection.OUTGOING.value,
-                     "message_type": MessageType.TEXT.value,
-                     "from_name": self.__client_config.username,
-                     "has_video": False,
-                     "new": True,
-                     "date": datetime.now().isoformat()}
+        json_data = {
+            "contact_value": send_to,
+            "contact_type": ContactType.DEFAULT.value,
+            "message": message,
+            "read": ReadStatus.READ.value,
+            "message_direction": MessageDirection.OUTGOING.value,
+            "message_type": MessageType.TEXT.value,
+            "from_name": self.__client_config.username,
+            "has_video": False,
+            "new": True,
+            "date": datetime.now().isoformat(),
+        }
 
         data = {"json": json.dumps(json_data)}
 
@@ -56,29 +58,40 @@ class TextNowAPI:
             f"{self.__BASE_URL}{self.__API_ROUTE}{self.__USERS_ROUTE}/{self.__client_config.username}{self.__MESSAGES_ROUTE}",
             headers=self.__client_config.headers,
             cookies=self.__client_config.cookies,
-            data=data)
+            data=data,
+        )
         response.raise_for_status()
 
     @enforce_cooldown
-    def get_messages(self, conversation_phone_number: str,
-                     *,
-                     start_message_id: Optional[str] = None,
-                     page_size: Optional[int],
-                     get_archived: Optional[bool]) -> list[Message]:
+    def get_messages(
+        self,
+        conversation_phone_number: str,
+        *,
+        start_message_id: Optional[str] = None,
+        page_size: Optional[int],
+        get_archived: Optional[bool],
+    ) -> list[Message]:
         """
         This gets messages from the conversation with the given phone number.
 
         This will get all messages before (but not including) the message with the given start_message_id.
         If the given page_size is greater than the max allowed (30), will default to 30.
         """
-        page_size = page_size if page_size <= self.__MAX_MESSAGE_RESPONSE_SIZE else self.__MAX_MESSAGE_RESPONSE_SIZE
-        contact_value = f"+{conversation_phone_number}" if not conversation_phone_number.startswith(
-            "+") else conversation_phone_number
+        page_size = (
+            page_size
+            if page_size <= self.__MAX_MESSAGE_RESPONSE_SIZE
+            else self.__MAX_MESSAGE_RESPONSE_SIZE
+        )
+        contact_value = (
+            f"+{conversation_phone_number}"
+            if not conversation_phone_number.startswith("+")
+            else conversation_phone_number
+        )
         params = {
             "contact_value": contact_value,
             "direction": "past",
             "page_size": page_size,
-            "get_archived": 1 if get_archived else 0
+            "get_archived": 1 if get_archived else 0,
         }
         if start_message_id is not None:
             params["start_message_id"] = start_message_id
@@ -88,7 +101,8 @@ class TextNowAPI:
         response = requests.get(
             url_with_params,
             headers=self.__client_config.headers,
-            cookies=self.__client_config.cookies)
+            cookies=self.__client_config.cookies,
+        )
         response.raise_for_status()
 
         message_dicts = response.json()["messages"]
@@ -105,22 +119,20 @@ class TextNowAPI:
 
     @enforce_cooldown
     def mark_message_as_read(self, message: Message) -> None:
-
         clean_number = quote(message.number)
         url = f"{self.__BASE_URL}{self.__API_ROUTE}{self.__USERS_ROUTE}/{self.__client_config.username}{self.__CONVERSATIONS_ROUTE}/{clean_number}"
 
-        params = {
-            "latest_message_id": message.id_,
-            "http_method": "PATCH"
-        }
+        params = {"latest_message_id": message.id_, "http_method": "PATCH"}
 
         data = {"read": True}
 
-        response = requests.patch(url,
-                                  params=params,
-                                  data=data,
-                                  cookies=self.__client_config.cookies,
-                                  headers=self.__client_config.headers)
+        response = requests.patch(
+            url,
+            params=params,
+            data=data,
+            cookies=self.__client_config.cookies,
+            headers=self.__client_config.headers,
+        )
         response.raise_for_status()
 
     @enforce_cooldown
@@ -130,9 +142,9 @@ class TextNowAPI:
         """
 
         url = f"{self.__BASE_URL}{self.__API_ROUTE}{self.__USERS_ROUTE}/{self.__client_config.username}{self.__MESSAGES_ROUTE}/{message_id}"
-        response = requests.delete(url,
-                                   cookies=self.__client_config.cookies,
-                                   headers=self.__client_config.headers)
+        response = requests.delete(
+            url, cookies=self.__client_config.cookies, headers=self.__client_config.headers
+        )
         response.raise_for_status()
 
     @enforce_cooldown
@@ -147,7 +159,8 @@ class TextNowAPI:
         response = requests.get(
             url_with_params,
             headers=self.__client_config.headers,
-            cookies=self.__client_config.cookies)
+            cookies=self.__client_config.cookies,
+        )
         response.raise_for_status()
 
         return response.json()["result"]
@@ -158,28 +171,29 @@ class TextNowAPI:
         Uploads the given raw_media to the given URL.
         """
         headers = {
-            'accept': '*/*',
-            'content-type': media_type,
-            'accept-language': 'en-US,en;q=0.9',
+            "accept": "*/*",
+            "content-type": media_type,
+            "accept-language": "en-US,en;q=0.9",
             "mode": "cors",
             "method": "PUT",
-            "credentials": 'omit'
+            "credentials": "omit",
         }
 
-        response = requests.put(attachment_url,
-                                data=raw_media,
-                                headers=headers,
-                                cookies=self.__client_config.cookies)
+        response = requests.put(
+            attachment_url, data=raw_media, headers=headers, cookies=self.__client_config.cookies
+        )
         response.raise_for_status()
 
     @enforce_cooldown
-    def send_attachment(self, *,
-                        conversation_phone_number: str,
-                        message_type: MessageType,
-                        file_type: str,
-                        is_video: bool,
-                        attachment_url: str) -> None:
-
+    def send_attachment(
+        self,
+        *,
+        conversation_phone_number: str,
+        message_type: MessageType,
+        file_type: str,
+        is_video: bool,
+        attachment_url: str,
+    ) -> None:
         data = {
             "contact_value": conversation_phone_number,
             "contact_type": ContactType.ALTERNATE.value,
@@ -191,23 +205,25 @@ class TextNowAPI:
             "new": True,
             "date": datetime.now().isoformat(),
             "attachment_url": attachment_url,
-            "media_type": file_type
+            "media_type": file_type,
         }
 
         url = f"{self.__BASE_URL}{self.__API_ROUTE}/{self.__VERSION}{self.__SEND_ATTACHMENT_ROUTE}"
 
-        response = requests.post(url,
-                                 data=data,
-                                 headers=self.__client_config.headers,
-                                 cookies=self.__client_config.cookies)
+        response = requests.post(
+            url,
+            data=data,
+            headers=self.__client_config.headers,
+            cookies=self.__client_config.cookies,
+        )
         response.raise_for_status()
 
     @enforce_cooldown
     def get_groups(self) -> list[Group]:
         url = f"{self.__BASE_URL}{self.__API_ROUTE}{self.__USERS_ROUTE}/{self.__client_config.username}{self.__GROUPS_ROUTE}"
-        response = requests.get(url,
-                                headers=self.__client_config.headers,
-                                cookies=self.__client_config.cookies)
+        response = requests.get(
+            url, headers=self.__client_config.headers, cookies=self.__client_config.cookies
+        )
         response.raise_for_status()
 
         group_list = list()
@@ -218,9 +234,9 @@ class TextNowAPI:
     @enforce_cooldown
     def get_user(self) -> User:
         url = f"{self.__BASE_URL}{self.__API_ROUTE}{self.__USERS_ROUTE}/{self.__client_config.username}"
-        response = requests.get(url,
-                                headers=self.__client_config.headers,
-                                cookies=self.__client_config.cookies)
+        response = requests.get(
+            url, headers=self.__client_config.headers, cookies=self.__client_config.cookies
+        )
         response.raise_for_status()
 
         return User.from_dict(response.json())
@@ -232,17 +248,10 @@ class TextNowAPI:
         """
         url = f"{self.__BASE_URL}{self.__API_ROUTE}{self.__USERS_ROUTE}/{self.__client_config.username}{self.__GROUPS_ROUTE}"
 
-        data = {
-            "json": {
-                "members": list()
-            }
-        }
+        data = {"json": {"members": list()}}
 
         for phone_number in phone_numbers:
-            member = {
-                "contact_value": phone_number,
-                "contact_type": ContactType.ALTERNATE.value
-            }
+            member = {"contact_value": phone_number, "contact_type": ContactType.ALTERNATE.value}
             data["json"]["members"].append(member)
 
         data = parse.urlencode(data, quote_via=urllib.parse.quote)
@@ -252,10 +261,9 @@ class TextNowAPI:
         headers = self.__client_config.headers
         headers["Content-Type"] = "application/x-www-form-urlencoded; charset=UTF-8"
 
-        response = requests.post(url,
-                                 data=data,
-                                 headers=headers,
-                                 cookies=self.__client_config.cookies)
+        response = requests.post(
+            url, data=data, headers=headers, cookies=self.__client_config.cookies
+        )
         response.raise_for_status()
 
         return Group.from_dict(response.json())
@@ -265,11 +273,14 @@ class TextNowAPI:
         """
         Deletes the conversation with the given phone number.
         """
-        conversation_phone_number = conversation_phone_number if not conversation_phone_number.startswith(
-            "+") else conversation_phone_number[1:]
+        conversation_phone_number = (
+            conversation_phone_number
+            if not conversation_phone_number.startswith("+")
+            else conversation_phone_number[1:]
+        )
         url = f"{self.__BASE_URL}{self.__API_ROUTE}{self.__USERS_ROUTE}/{self.__client_config.username}{self.__CONVERSATIONS_ROUTE}/%2B{conversation_phone_number}"
 
-        response = requests.delete(url,
-                                   headers=self.__client_config.headers,
-                                   cookies=self.__client_config.cookies)
+        response = requests.delete(
+            url, headers=self.__client_config.headers, cookies=self.__client_config.cookies
+        )
         response.raise_for_status()
