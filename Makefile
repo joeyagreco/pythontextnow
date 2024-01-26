@@ -1,6 +1,7 @@
 # INSTALL DEPENDENCIES
 .PHONY: deps
 deps:
+	@python3.10 -m pip install -r requirements.dev.txt
 	@python3.10 -m pip install -r requirements.txt
 
 # FORMAT PYTHON CODE
