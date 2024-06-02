@@ -9,6 +9,8 @@ A Python wrapper for TextNow.
 
 [TextNow Website](https://www.textnow.com/)
 
+[![PyPi Version](https://img.shields.io/pypi/v/pythontextnow)](https://pypi.org/project/pythontextnow/)
+<br>
 <a target="_blank" href="https://www.python.org/downloads/" title="Python version"><img src="https://img.shields.io/badge/python-%3E=_3.10-teal.svg"></a>
 ![Main Build](https://github.com/joeyagreco/pythontextnow/actions/workflows/main-build.yml/badge.svg)
 ![Last Commit](https://img.shields.io/github/last-commit/joeyagreco/pythontextnow)
