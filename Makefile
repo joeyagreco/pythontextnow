@@ -1,20 +1,32 @@
-# INSTALL DEPENDENCIES
 .PHONY: deps
 deps:
-	@python3.10 -m pip install -r requirements.dev.txt
-	@python3.10 -m pip install -r requirements.txt
+	@python -m pip install -r requirements.dev.txt
+	@python -m pip install -r requirements.txt
 
-# FORMAT PYTHON CODE
 .PHONY: fmt
 fmt:
-	@black --config=pyproject.toml .
-	@autoflake --config=pyproject.toml .
-	@isort .
+	@ruff check --fix
+	@ruff format
 
-# RUN UNIT TESTS
+.PHONY: fmt-check
+fmt-check:
+	@ruff check
+	@ruff format --check
+
 .PHONY: test
 test:
 	@pytest
 
+.PHONY: pkg-build
+pkg-build:
+	@rm -rf build
+	@rm -rf dist
+	@python setup.py sdist bdist_wheel
 
+.PHONY: pkg-test
+pkg-test:
+	@python -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 
+.PHONY: pkg-prod
+pkg-prod:
+	@python -m twine upload dist/*
