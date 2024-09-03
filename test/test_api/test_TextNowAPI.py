@@ -1,6 +1,5 @@
 import datetime
 import os
-from test.helper.helper_classes import MockResponse
 from unittest import TestCase, mock
 
 from pythontextnow.api.Client import Client
@@ -10,10 +9,13 @@ from pythontextnow.model.Group import Group
 from pythontextnow.model.MultiMediaMessage import MultiMediaMessage
 from pythontextnow.model.TextMessage import TextMessage
 from pythontextnow.model.User import User
+from test.helper.helper_classes import MockResponse
 
 
 class TestTextNowAPI(TestCase):
-    PATH_TO_DATA_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../data"))
+    PATH_TO_DATA_DIR = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "../data")
+    )
 
     @classmethod
     @mock.patch("requests.get")
@@ -25,7 +27,9 @@ class TestTextNowAPI(TestCase):
 
         mock_response = MockResponse(dict(), 200, text=dummy_messaging_page_str)
         mock_requests_get.return_value = mock_response
-        Client.set_client_config(username="dummy_username", sid_cookie="dummy_sid_cookie")
+        Client.set_client_config(
+            username="dummy_username", sid_cookie="dummy_sid_cookie"
+        )
 
     @mock.patch("requests.post")
     def test_send_message_happy_path(self, mock_requests_post):
@@ -56,7 +60,10 @@ class TestTextNowAPI(TestCase):
         mock_requests_get.return_value = mock_response
         text_now_api = TextNowAPI()
         response = text_now_api.get_messages.__wrapped__(
-            text_now_api, conversation_phone_number="1111111111", page_size=10, get_archived=True
+            text_now_api,
+            conversation_phone_number="1111111111",
+            page_size=10,
+            get_archived=True,
         )
 
         message = response[0]
@@ -66,7 +73,8 @@ class TestTextNowAPI(TestCase):
         self.assertEqual("id", message.id_)
         self.assertEqual("contact_value", message.number)
         self.assertEqual(
-            datetime.datetime(2000, 1, 1, 1, 1, tzinfo=datetime.timezone.utc), message.datetime_
+            datetime.datetime(2000, 1, 1, 1, 1, tzinfo=datetime.timezone.utc),
+            message.datetime_,
         )
         self.assertTrue(message.first_contact)
         self.assertEqual(MessageType.TEXT, message.message_type)
@@ -93,7 +101,10 @@ class TestTextNowAPI(TestCase):
         mock_requests_get.return_value = mock_response
         text_now_api = TextNowAPI()
         response = text_now_api.get_messages.__wrapped__(
-            text_now_api, conversation_phone_number="1111111111", page_size=10, get_archived=True
+            text_now_api,
+            conversation_phone_number="1111111111",
+            page_size=10,
+            get_archived=True,
         )
 
         message = response[0]
@@ -103,7 +114,8 @@ class TestTextNowAPI(TestCase):
         self.assertEqual("id", message.id_)
         self.assertEqual("contact_value", message.number)
         self.assertEqual(
-            datetime.datetime(2000, 1, 1, 1, 1, tzinfo=datetime.timezone.utc), message.datetime_
+            datetime.datetime(2000, 1, 1, 1, 1, tzinfo=datetime.timezone.utc),
+            message.datetime_,
         )
         self.assertTrue(message.first_contact)
         self.assertEqual(MessageType.IMAGE, message.message_type)
@@ -139,7 +151,9 @@ class TestTextNowAPI(TestCase):
         mock_response = MockResponse(dict(), 200)
         mock_requests_delete.return_value = mock_response
         text_now_api = TextNowAPI()
-        response = text_now_api.delete_message.__wrapped__(text_now_api, message_id="12345")
+        response = text_now_api.delete_message.__wrapped__(
+            text_now_api, message_id="12345"
+        )
 
         self.assertIsNone(response)
 
@@ -228,7 +242,7 @@ class TestTextNowAPI(TestCase):
         self.assertEqual(ContactType.DEFAULT, response[0].members[0].contact_type)
         self.assertEqual("2222222222", response[0].members[0].contact_value)
         self.assertEqual("+2222222222", response[0].members[0].e164_contact_value)
-        self.assertEqual("display", response[0].members[0].display_value),
+        (self.assertEqual("display", response[0].members[0].display_value),)
         self.assertEqual("#111111", response[0].members[0].avatar.background_color)
         self.assertEqual("https://test", response[0].members[0].avatar.picture)
         self.assertEqual("initials", response[0].members[0].avatar.initials)
@@ -284,7 +298,9 @@ class TestTextNowAPI(TestCase):
         mock_response = MockResponse(dummy_group, 200)
         mock_requests_post.return_value = mock_response
         text_now_api = TextNowAPI()
-        response = text_now_api.create_group.__wrapped__(text_now_api, phone_numbers=["1111111111"])
+        response = text_now_api.create_group.__wrapped__(
+            text_now_api, phone_numbers=["1111111111"]
+        )
 
         self.assertIsInstance(response, Group)
         self.assertEqual("group", response.title)
@@ -296,7 +312,7 @@ class TestTextNowAPI(TestCase):
         self.assertEqual(ContactType.DEFAULT, response.members[0].contact_type)
         self.assertEqual("2222222222", response.members[0].contact_value)
         self.assertEqual("+2222222222", response.members[0].e164_contact_value)
-        self.assertEqual("display", response.members[0].display_value),
+        (self.assertEqual("display", response.members[0].display_value),)
         self.assertEqual("#111111", response.members[0].avatar.background_color)
         self.assertEqual("https://test", response.members[0].avatar.picture)
         self.assertEqual("initials", response.members[0].avatar.initials)

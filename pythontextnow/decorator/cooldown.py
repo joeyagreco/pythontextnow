@@ -17,7 +17,9 @@ def enforce_cooldown(function: Callable) -> Callable:
 
     @wraps(function)
     def wrapFunction(*args, **kwargs):
-        cooldown_seconds = ConfigReader.get("api", "api_call_cooldown_seconds", as_type=float)
+        cooldown_seconds = ConfigReader.get(
+            "api", "api_call_cooldown_seconds", as_type=float
+        )
         client_config = Client.get_client_config()
         now = datetime.datetime.now()
         difference_seconds = (now - client_config.last_call_time).total_seconds()

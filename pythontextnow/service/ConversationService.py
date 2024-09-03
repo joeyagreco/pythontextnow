@@ -61,7 +61,9 @@ class ConversationService:
         # find the group that contains exactly all conversation_phone_numbers + this user's TextNow number
         for group in groups:
             # keep track of all numbers that should be in the group we are looking for
-            all_needed_group_numbers = [user.phone_number] + self.__conversation_phone_numbers
+            all_needed_group_numbers = [
+                user.phone_number
+            ] + self.__conversation_phone_numbers
             # keep track of all numbers that have are a match
             matching_numbers = list()
             if len(group.members) == len(all_needed_group_numbers):
@@ -73,7 +75,10 @@ class ConversationService:
                             if member.e164_contact_value is not None
                             else member.contact_value
                         )
-                        if needed_number in member_number or member_number in needed_number:
+                        if (
+                            needed_number in member_number
+                            or member_number in needed_number
+                        ):
                             # in the group we are looking for
                             matching_numbers.append(member_number)
             if len(matching_numbers) == len(all_needed_group_numbers):
@@ -99,7 +104,9 @@ class ConversationService:
         Sends a text message to this instance's conversation_phone_number.
         """
         message = general.replace_newlines(message)
-        self.__text_now_api.send_message(message=message, send_to=self.__conversation_number)
+        self.__text_now_api.send_message(
+            message=message, send_to=self.__conversation_number
+        )
 
     def get_messages(
         self, *, num_messages: Optional[int] = None, include_archived: bool = True
@@ -117,7 +124,9 @@ class ConversationService:
         start_message_id: Optional[str] = None
 
         messages_yielded = 0
-        page_size = num_messages if num_messages is not None else self.__DEFAULT_PAGE_SIZE
+        page_size = (
+            num_messages if num_messages is not None else self.__DEFAULT_PAGE_SIZE
+        )
 
         while num_messages is None or messages_yielded < num_messages and page_size > 0:
             messages = self.__text_now_api.get_messages(
@@ -135,7 +144,9 @@ class ConversationService:
             else:
                 return
 
-    def mark_as_read(self, *, message: Message = None, messages: list[Message] = None) -> None:
+    def mark_as_read(
+        self, *, message: Message = None, messages: list[Message] = None
+    ) -> None:
         """
         Marks the given message/s as read.
         This enforces a cooldown time between each call.
@@ -184,7 +195,9 @@ class ConversationService:
         with open(file_path, mode="rb") as media:
             raw_media = media.read()
 
-        attachment_url = self.__text_now_api.get_attachment_url(message_type=message_type)
+        attachment_url = self.__text_now_api.get_attachment_url(
+            message_type=message_type
+        )
 
         self.__text_now_api.upload_raw_media(
             attachment_url=attachment_url, raw_media=raw_media, media_type=media_type
@@ -203,4 +216,6 @@ class ConversationService:
         Deletes this conversation.
         """
         conversation_number = self.__conversation_number
-        self.__text_now_api.delete_conversation(conversation_phone_number=conversation_number)
+        self.__text_now_api.delete_conversation(
+            conversation_phone_number=conversation_number
+        )

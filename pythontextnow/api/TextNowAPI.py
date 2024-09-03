@@ -143,7 +143,9 @@ class TextNowAPI:
 
         url = f"{self.__BASE_URL}{self.__API_ROUTE}{self.__USERS_ROUTE}/{self.__client_config.username}{self.__MESSAGES_ROUTE}/{message_id}"
         response = requests.delete(
-            url, cookies=self.__client_config.cookies, headers=self.__client_config.headers
+            url,
+            cookies=self.__client_config.cookies,
+            headers=self.__client_config.headers,
         )
         response.raise_for_status()
 
@@ -166,7 +168,9 @@ class TextNowAPI:
         return response.json()["result"]
 
     @enforce_cooldown
-    def upload_raw_media(self, *, attachment_url: str, raw_media: bytes, media_type: str) -> None:
+    def upload_raw_media(
+        self, *, attachment_url: str, raw_media: bytes, media_type: str
+    ) -> None:
         """
         Uploads the given raw_media to the given URL.
         """
@@ -180,7 +184,10 @@ class TextNowAPI:
         }
 
         response = requests.put(
-            attachment_url, data=raw_media, headers=headers, cookies=self.__client_config.cookies
+            attachment_url,
+            data=raw_media,
+            headers=headers,
+            cookies=self.__client_config.cookies,
         )
         response.raise_for_status()
 
@@ -222,7 +229,9 @@ class TextNowAPI:
     def get_groups(self) -> list[Group]:
         url = f"{self.__BASE_URL}{self.__API_ROUTE}{self.__USERS_ROUTE}/{self.__client_config.username}{self.__GROUPS_ROUTE}"
         response = requests.get(
-            url, headers=self.__client_config.headers, cookies=self.__client_config.cookies
+            url,
+            headers=self.__client_config.headers,
+            cookies=self.__client_config.cookies,
         )
         response.raise_for_status()
 
@@ -235,7 +244,9 @@ class TextNowAPI:
     def get_user(self) -> User:
         url = f"{self.__BASE_URL}{self.__API_ROUTE}{self.__USERS_ROUTE}/{self.__client_config.username}"
         response = requests.get(
-            url, headers=self.__client_config.headers, cookies=self.__client_config.cookies
+            url,
+            headers=self.__client_config.headers,
+            cookies=self.__client_config.cookies,
         )
         response.raise_for_status()
 
@@ -251,7 +262,10 @@ class TextNowAPI:
         data = {"json": {"members": list()}}
 
         for phone_number in phone_numbers:
-            member = {"contact_value": phone_number, "contact_type": ContactType.ALTERNATE.value}
+            member = {
+                "contact_value": phone_number,
+                "contact_type": ContactType.ALTERNATE.value,
+            }
             data["json"]["members"].append(member)
 
         data = parse.urlencode(data, quote_via=urllib.parse.quote)
@@ -281,6 +295,8 @@ class TextNowAPI:
         url = f"{self.__BASE_URL}{self.__API_ROUTE}{self.__USERS_ROUTE}/{self.__client_config.username}{self.__CONVERSATIONS_ROUTE}/%2B{conversation_phone_number}"
 
         response = requests.delete(
-            url, headers=self.__client_config.headers, cookies=self.__client_config.cookies
+            url,
+            headers=self.__client_config.headers,
+            cookies=self.__client_config.cookies,
         )
         response.raise_for_status()
