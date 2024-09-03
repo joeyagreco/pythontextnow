@@ -24,7 +24,7 @@ jobs:
           python -m pip install --upgrade pip
           make deps
       - name: Check Formatting
-        run: make fmt
+        run: make fmt-check
       - name: Test with pytest
         run: |
           pytest
