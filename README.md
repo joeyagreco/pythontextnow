@@ -204,7 +204,7 @@ To find this cookie:
 
 ## Development
 
-Install Dependencies: `make deps`
+Install Dependencies: `make deps`\
 Run Tests: `make test`
 
 ## Contributing
