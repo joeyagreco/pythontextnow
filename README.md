@@ -5,7 +5,7 @@
 <img src="https://raw.githubusercontent.com/joeyagreco/pythontextnow/main/img/pythontextnow_logo_.png" alt="pythontextnow logo" width="450"/>
 
 Send SMS messages from Python!\
-A Python wrapper for TextNow. 
+A Python wrapper for TextNow.
 
 [TextNow Website](https://www.textnow.com/)
 
@@ -14,25 +14,8 @@ A Python wrapper for TextNow.
 <a target="_blank" href="https://www.python.org/downloads/" title="Python version"><img src="https://img.shields.io/badge/python-%3E=_3.10-teal.svg"></a>
 ![Main Build](https://github.com/joeyagreco/pythontextnow/actions/workflows/main-build.yml/badge.svg)
 ![Last Commit](https://img.shields.io/github/last-commit/joeyagreco/pythontextnow)
+
 </div>
-
-### Table of Contents
-
-- [Installation](https://github.com/joeyagreco/pythontextnow#installation)
-- [Usage](https://github.com/joeyagreco/pythontextnow#usage)
-    - [Configure Client](https://github.com/joeyagreco/pythontextnow#configure-client)
-    - [Get Messages](https://github.com/joeyagreco/pythontextnow#get-messages)
-    - [Send a Message](https://github.com/joeyagreco/pythontextnow#send-a-message)
-    - [Send Media](https://github.com/joeyagreco/pythontextnow#send-media)
-    - [Mark a Message as Read](https://github.com/joeyagreco/pythontextnow#mark-a-message-as-read)
-    - [Delete a Message](https://github.com/joeyagreco/pythontextnow#delete-a-message)
-    - [Delete a Conversation](https://github.com/joeyagreco/pythontextnow#delete-a-conversation)
-- [Setup](https://github.com/joeyagreco/pythontextnow#setup)
-    - [Obtaining Your Username](https://github.com/joeyagreco/pythontextnow#obtaining-your-username)
-    - [Obtaining Your Cookies](https://github.com/joeyagreco/pythontextnow#obtaining-your-cookies)
-- [Running Tests](https://github.com/joeyagreco/pythontextnow#running-tests)
-- [Contributing](https://github.com/joeyagreco/pythontextnow#contributing)
-- [License](https://github.com/joeyagreco/pythontextnow#license)
 
 ## Installation
 
@@ -68,13 +51,7 @@ The ConversationService is how you will perform any action.
 
 It takes a list of phone numbers which define the conversation you would like to perform your actions on.
 
-<!---
-// @formatter:off
--->
 **All phone numbers must be given in [E.164 format](https://help.aircall.io/en/articles/4350988-what-is-e-164-format).**
-<!---
-// @formatter:on
--->
 
 ```python3
 from pythontextnow import ConversationService
@@ -140,7 +117,7 @@ You can send:
 conversation_service.send_message(file_path="C:\\my_media.png")
 ```
 
-### Mark a Message as Read
+### Mark Messages as Read
 
 To mark a message as read, use the `mark_as_read()` method.
 
@@ -170,13 +147,7 @@ Delete a message by its ID.
 conversation_service.delete_message(message_id="123456")
 ```
 
-<!---
-// @formatter:off
--->
 Delete a message with its [Message](https://github.com/joeyagreco/pythontextnow/blob/main/pythontextnow/model/Message.py) object.
-<!---
-// @formatter:on
--->
 
 ```python3
 # assume you had a Message object saved to the variable "message_obj"
@@ -200,11 +171,7 @@ You will need to know your TextNow username to utilize this library.
 
 This is the same username that you would use to log in.
 
-To find this username:
-
-- Go to [TextNow's messaging page](https://www.textnow.com/messaging) (make sure you are logged in)
-- Click "Settings"
-- Your username will be listed under "Account"
+To find this username, navigate to your [profile](https://www.textnow.com/settings/profile).
 
 ### Obtaining Your Cookie
 
@@ -215,6 +182,7 @@ To find this cookie:
 - Go to [TextNow's messaging page](https://www.textnow.com/messaging) (make sure you are logged in to your account)
 
 > In **Chrome**:
+>
 > - Access [Developer Tools](https://developer.chrome.com/docs/devtools/open/) in your browser
 > - Click on the "Application" tab
 > - Click on the "Network" tab
@@ -224,6 +192,7 @@ To find this cookie:
 > - Locate the "Cookie" field
 
 > In **Firefox**
+>
 > - Access [Developer Tools](https://firefox-source-docs.mozilla.org/devtools-user/) in your browser
 > - Click on the "Network" tab
 > - Find a request under "XHR"
@@ -233,13 +202,10 @@ To find this cookie:
 
 - Locate the "connect.sid" field, the value will be your SID cookie
 
-## Running Tests
+## Development
 
-To run tests, run the following command:
-
-```bash
-  pytest
-```
+Install Dependencies: `make deps`
+Run Tests: `make test`
 
 ## Contributing
 
